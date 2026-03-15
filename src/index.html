@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Palisades — Calm. Clear. Elevated.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+
+:root {
+  --orange:    #EE5D3E;
+  --orange-dk: #D44A2C;
+  --light:     #F2F2F2;
+  --taupe:     #A69581;
+  --ink:       #1C1A18;
+  --deep:      #100E0C;
+  --line:      rgba(166,149,129,0.18);
+  --line-dark: rgba(255,255,255,0.07);
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--ink);
+  color: var(--light);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:997; opacity:.2;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='.05'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:300;
+  padding:20px 52px;
+  display:flex; align-items:center; justify-content:space-between;
+  transition:background .4s, border-color .4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled {
+  background:rgba(28,26,24,.94);
+  backdrop-filter:blur(16px);
+  border-bottom-color:var(--line-dark);
+}
+.nav-logo img { height:32px; width:auto; display:block; filter:brightness(0) invert(1); opacity:.9; }
+.nav-links { display:flex; gap:30px; list-style:none; }
+.nav-links a {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--taupe); text-decoration:none; transition:color .2s;
+}
+.nav-links a:hover { color:var(--light); }
+.nav-cta {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:#fff; background:var(--orange);
+  padding:10px 24px; text-decoration:none; transition:background .2s;
+}
+.nav-cta:hover { background:var(--orange-dk); }
+
+/* ════════════════════════════════
+   1. HERO
+════════════════════════════════ */
+.hero {
+  min-height:100vh;
+  display:grid; grid-template-columns:52% 48%;
+  position:relative; overflow:hidden;
+  background:var(--ink);
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 65% at 70% 38%, rgba(238,93,62,.13) 0%,transparent 58%),
+    radial-gradient(ellipse 35% 50% at 8%  72%, rgba(166,149,129,.06) 0%,transparent 52%);
+}
+/* cliff silhouette bottom */
+.hero::after {
+  content:''; position:absolute;
+  bottom:0; left:0; right:0; height:28%;
+  background:linear-gradient(to top, rgba(238,93,62,.055) 0%, transparent 100%);
+  clip-path:polygon(0 62%,7% 38%,15% 56%,23% 22%,31% 46%,39% 8%,47% 32%,56% 2%,64% 24%,72% 0%,80% 18%,88% 4%,95% 14%,100% 6%,100% 100%,0 100%);
+}
+
+.hero-l {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:140px 68px 100px;
+}
+.hero-kicker {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500;
+  letter-spacing:.38em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:28px;
+  opacity:0; animation:up .8s ease .2s forwards;
+}
+.hero-h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(68px,9vw,124px);
+  font-weight:400; line-height:.92;
+  color:var(--light); margin-bottom:36px;
+  opacity:0; animation:up 1s ease .4s forwards;
+}
+.hero-h1 em { font-style:italic; color:var(--orange); display:block; }
+
+/* thin orange rule */
+.hero-rule {
+  width:44px; height:2px; background:var(--orange);
+  margin-bottom:28px;
+  opacity:0; animation:up .9s ease .55s forwards;
+}
+.hero-p {
+  font-size:15px; line-height:1.85;
+  color:rgba(166,149,129,.72);
+  max-width:360px; margin-bottom:48px;
+  opacity:0; animation:up .9s ease .65s forwards;
+}
+.hero-btns {
+  display:flex; align-items:center; gap:22px;
+  opacity:0; animation:up .9s ease .8s forwards;
+}
+.btn-fill {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:.24em; text-transform:uppercase;
+  color:#fff; background:var(--orange);
+  padding:15px 34px; text-decoration:none; transition:background .2s;
+}
+.btn-fill:hover { background:var(--orange-dk); }
+.btn-ghost {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:500;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:var(--taupe); text-decoration:none;
+  display:flex; align-items:center; gap:11px; transition:color .2s;
+}
+.btn-ghost::after {
+  content:''; display:block; width:30px; height:1px;
+  background:var(--orange); transition:width .3s;
+}
+.btn-ghost:hover { color:var(--light); }
+.btn-ghost:hover::after { width:46px; }
+
+/* hero brand tagline — vertical */
+.hero-stamp {
+  position:absolute; bottom:52px; left:68px; z-index:2;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500;
+  letter-spacing:.3em; text-transform:uppercase;
+  color:rgba(166,149,129,.28);
+  opacity:0; animation:fadeIn .8s ease 1.4s forwards;
+}
+
+.hero-r {
+  position:relative; z-index:2;
+  display:flex; align-items:center; justify-content:center;
+  padding:120px 36px 80px;
+  opacity:0; animation:fadeIn 1.4s ease .5s forwards;
+}
+.hero-product {
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-glow {
+  position:absolute;
+  width:280px; height:380px; bottom:-32px;
+  background:radial-gradient(ellipse at center, rgba(238,93,62,.2) 0%, transparent 62%);
+  filter:blur(30px); left:50%; transform:translateX(-50%);
+}
+.hero-img {
+  width:clamp(200px,23vw,300px); height:auto; display:block;
+  position:relative; z-index:2;
+  filter:drop-shadow(0 44px 72px rgba(0,0,0,.6));
+}
+.hero-floats {
+  position:absolute; inset:0; pointer-events:none;
+}
+.hf {
+  position:absolute;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:var(--taupe);
+  display:flex; align-items:center; gap:9px; white-space:nowrap;
+}
+.hf::before {
+  content:''; display:block; width:5px; height:5px;
+  border-radius:50%; background:var(--orange); flex-shrink:0;
+}
+.hf-1 { top:22%; right:0; }
+.hf-2 { bottom:28%; left:0; }
+
+/* scroll cue */
+.hero-scroll {
+  position:absolute; bottom:38px; left:50%; transform:translateX(-50%);
+  z-index:3; display:flex; flex-direction:column; align-items:center; gap:9px;
+  opacity:0; animation:fadeIn .8s ease 1.8s forwards;
+}
+.scroll-needle {
+  width:1px; height:44px;
+  background:linear-gradient(to bottom, var(--orange), transparent);
+  animation:needle 2.4s ease infinite;
+}
+.scroll-lbl {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:var(--taupe);
+}
+
+/* ════════════════════════════════
+   2. PRODUCTS
+════════════════════════════════ */
+.products {
+  background:var(--light);
+  padding:96px 52px;
+}
+.products-head {
+  max-width:1280px; margin:0 auto 52px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+  padding-bottom:24px; border-bottom:2px solid var(--ink);
+}
+.products-head-l .eyebrow {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.36em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:10px;
+}
+.products-head-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,3.8vw,52px); font-weight:400;
+  color:var(--ink); line-height:1.1;
+}
+.products-head-title em { font-style:italic; color:var(--orange); }
+.products-head-note {
+  font-size:13.5px; color:var(--taupe);
+  max-width:240px; text-align:right; line-height:1.75;
+}
+
+.product-grid {
+  max-width:1280px; margin:0 auto;
+  display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:3px;
+}
+
+/* ── Showcase card ── */
+.p-show {
+  background:var(--ink);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.p-show-visual {
+  flex:1; position:relative; min-height:480px; overflow:hidden;
+  background:linear-gradient(160deg, #232020 0%, #1A1816 100%);
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.p-show-visual::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 65% 55% at 50% 65%, rgba(238,93,62,.12) 0%,transparent 55%);
+}
+.p-show-img {
+  width:88%; max-width:400px; display:block;
+  object-fit:contain; padding:36px 16px 0;
+  position:relative; z-index:2;
+  filter:drop-shadow(0 16px 40px rgba(0,0,0,.55));
+}
+.p-show-tag {
+  position:absolute; top:28px; left:28px; z-index:3;
+}
+.p-show-tag .eyebrow {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:6px;
+}
+.p-show-tag-name {
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:400; color:var(--light); line-height:1.2;
+}
+.p-show-foot {
+  padding:22px 26px;
+  border-top:1px solid rgba(238,93,62,.22);
+}
+.swatches { display:flex; gap:9px; margin-bottom:12px; }
+.sw {
+  width:17px; height:17px; border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.1); cursor:pointer; transition:transform .2s;
+}
+.sw:hover { transform:scale(1.3); }
+.sw-f { background:#2C4A32; }
+.sw-o { background:var(--orange); }
+.sw-b { background:#0A0908; }
+.sw-s { background:#C0BAB4; }
+.p-show-tagline { font-size:12px; color:rgba(166,149,129,.55); font-style:italic; line-height:1.6; }
+
+/* ── SKU cards ── */
+.sku-stack { display:flex; flex-direction:column; gap:3px; }
+.sku {
+  flex:1; background:var(--light); overflow:hidden; cursor:pointer;
+  display:flex; flex-direction:column;
+}
+.sku-visual {
+  position:relative; min-height:232px; overflow:hidden;
+}
+.sku-bg {
+  position:absolute; inset:0;
+  transition:transform .6s cubic-bezier(.25,.46,.45,.94);
+}
+.sku:hover .sku-bg { transform:scale(1.05); }
+.skub-1 { background:linear-gradient(145deg,#D4C8B4 0%,#BEB098 100%); }
+.skub-2 { background:linear-gradient(145deg,#BCCABC 0%,#9EB898 100%); }
+.sku-shade {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(28,26,24,.14) 0%, transparent 50%);
+}
+.sku-label { position:absolute; top:22px; left:22px; z-index:2; }
+.sku-type {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500; letter-spacing:.26em; text-transform:uppercase;
+  color:rgba(28,26,24,.42); margin-bottom:5px;
+}
+.sku-name {
+  font-family:'Playfair Display',serif;
+  font-size:22px; font-weight:400; color:var(--ink); line-height:1.15;
+}
+.sku-info {
+  padding:18px 22px; border-top:1px solid var(--line);
+  flex:1; display:flex; flex-direction:column; justify-content:space-between;
+}
+.sku-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.tag {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--taupe); border:1px solid var(--line); padding:3px 9px;
+}
+.sku-row { display:flex; justify-content:space-between; align-items:center; }
+.sku-genetics {
+  font-family:'Playfair Display',serif;
+  font-size:13px; font-style:italic; color:var(--taupe);
+}
+.sku-arrow {
+  width:28px; height:28px; border-radius:50%;
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+  font-size:12px; color:var(--taupe); text-decoration:none; transition:all .25s;
+}
+.sku:hover .sku-arrow { background:var(--orange); border-color:var(--orange); color:#fff; }
+
+/* ════════════════════════════════
+   3. FIND US
+════════════════════════════════ */
+.find {
+  background:var(--ink);
+  padding:96px 52px;
+  position:relative; overflow:hidden;
+}
+.find::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 45% 65% at 88% 50%, rgba(238,93,62,.1) 0%,transparent 55%);
+}
+.find-inner {
+  max-width:1280px; margin:0 auto; position:relative; z-index:2;
+  display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start;
+}
+
+.find-l .eyebrow {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.36em; text-transform:uppercase;
+  color:var(--orange); margin-bottom:20px;
+}
+.find-h {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,3.6vw,52px); font-weight:400;
+  color:var(--light); line-height:1.1; margin-bottom:20px;
+}
+.find-h em { font-style:italic; color:var(--orange); }
+.find-p {
+  font-size:14.5px; line-height:1.85;
+  color:rgba(166,149,129,.6); margin-bottom:36px; max-width:400px;
+}
+
+.zip-wrap {
+  display:flex; max-width:380px;
+  border:1px solid rgba(166,149,129,.2); margin-bottom:36px;
+}
+.zip-in {
+  flex:1; padding:14px 18px;
+  background:transparent; border:none; outline:none;
+  font-family:'Barlow',sans-serif; font-size:13px; font-weight:300; color:var(--light);
+}
+.zip-in::placeholder { color:rgba(166,149,129,.38); font-style:italic; }
+.zip-go {
+  padding:0 20px; background:var(--orange); border:none;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:.2em; text-transform:uppercase;
+  color:#fff; cursor:pointer; transition:background .2s;
+}
+.zip-go:hover { background:var(--orange-dk); }
+
+.store-rows { border-top:1px solid var(--line-dark); }
+.s-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 0; border-bottom:1px solid var(--line-dark);
+}
+.s-name {
+  font-family:'Playfair Display',serif;
+  font-size:18px; font-weight:400; color:var(--light);
+}
+.s-loc { font-size:12px; color:var(--taupe); margin-top:2px; }
+.s-link {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--taupe); text-decoration:none;
+  display:flex; align-items:center; gap:8px;
+  white-space:nowrap; transition:color .2s;
+}
+.s-link::after { content:''; display:block; width:18px; height:1px; background:currentColor; transition:width .3s; }
+.s-link:hover { color:var(--orange); }
+.s-link:hover::after { width:28px; }
+.find-caveat { margin-top:20px; font-size:11px; color:rgba(166,149,129,.35); font-style:italic; }
+
+/* map */
+.find-r {}
+.find-map-label {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--taupe); margin-bottom:16px;
+}
+.map-box { border:1px solid var(--line-dark); padding:24px; }
+.map-vis {
+  width:100%; height:200px; position:relative; overflow:hidden;
+  background:linear-gradient(145deg,#242020 0%,#1C1A18 100%);
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+}
+.map-vis::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(circle 5px at 36% 44%, var(--orange) 0%,transparent 100%),
+    radial-gradient(circle 5px at 53% 36%, var(--orange) 0%,transparent 100%),
+    radial-gradient(circle 5px at 46% 60%, var(--orange) 0%,transparent 100%),
+    radial-gradient(circle 5px at 62% 49%, var(--orange) 0%,transparent 100%);
+  opacity:.75;
+}
+.map-vis-lbl {
+  font-family:'Playfair Display',serif;
+  font-size:13px; font-style:italic; color:rgba(166,149,129,.22); pointer-events:none;
+}
+.map-key { display:flex; flex-direction:column; gap:8px; }
+.mk-row { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--taupe); }
+.mk-dot { width:6px; height:6px; border-radius:50%; background:var(--orange); flex-shrink:0; }
+
+/* ════════════════════════════════
+   4. THE EDIT (email) + FOOTER
+════════════════════════════════ */
+.edit-wrap {
+  background:var(--orange);
+  padding:80px 52px;
+  position:relative; overflow:hidden;
+}
+.edit-wrap::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 55% 80% at 78% 50%, rgba(255,255,255,.07) 0%,transparent 55%);
+}
+.edit-inner {
+  max-width:1280px; margin:0 auto; position:relative; z-index:2;
+  display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center;
+}
+.edit-l .eyebrow {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.36em; text-transform:uppercase;
+  color:rgba(255,255,255,.48); margin-bottom:18px;
+}
+.edit-h {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,4vw,56px); font-weight:400;
+  color:#fff; line-height:1.08; margin-bottom:16px;
+}
+.edit-h em { font-style:italic; opacity:.82; }
+.edit-p { font-size:14.5px; line-height:1.85; color:rgba(255,255,255,.6); max-width:400px; }
+
+/* three perks in one line */
+.edit-perks {
+  display:flex; gap:32px; margin-top:36px;
+  padding-top:28px; border-top:1px solid rgba(255,255,255,.18);
+}
+.ep {
+  display:flex; align-items:flex-start; gap:10px; flex:1;
+}
+.ep-n {
+  font-family:'Playfair Display',serif;
+  font-size:13px; font-style:italic; color:rgba(255,255,255,.5);
+  flex-shrink:0; padding-top:1px;
+}
+.ep-t { font-size:12.5px; color:rgba(255,255,255,.55); line-height:1.6; }
+.ep-t strong { color:#fff; font-weight:400; }
+
+.edit-r { display:flex; flex-direction:column; }
+.edit-name {
+  font-family:'Playfair Display',serif;
+  font-size:26px; font-style:italic; font-weight:400; color:#fff; margin-bottom:5px;
+}
+.edit-sub {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.24em; text-transform:uppercase;
+  color:rgba(255,255,255,.38); margin-bottom:28px;
+}
+.e-form { display:flex; flex-direction:column; gap:9px; }
+.e-in {
+  padding:14px 16px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.22); outline:none;
+  font-family:'Barlow',sans-serif; font-size:13px; font-weight:300; color:#fff;
+  transition:border-color .25s;
+}
+.e-in::placeholder { color:rgba(255,255,255,.32); font-style:italic; }
+.e-in:focus { border-color:rgba(255,255,255,.55); }
+.e-btn {
+  padding:14px;
+  background:var(--ink); border:none;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:.24em; text-transform:uppercase;
+  color:#fff; cursor:pointer; transition:background .2s;
+}
+.e-btn:hover { background:#000; }
+.e-consent { font-size:10px; color:rgba(255,255,255,.28); line-height:1.6; margin-top:2px; }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--deep);
+  padding:48px 52px 32px;
+}
+.ft-row {
+  max-width:1280px; margin:0 auto;
+  display:grid; grid-template-columns:1.8fr 1fr 1fr 1fr;
+  gap:48px; padding-bottom:40px;
+  border-bottom:1px solid var(--line-dark); margin-bottom:28px;
+}
+.ft-brand img {
+  height:32px; width:auto; display:block;
+  filter:brightness(0) invert(1); opacity:.5; margin-bottom:12px;
+}
+.ft-desc { font-size:12.5px; line-height:1.75; color:rgba(166,149,129,.28); max-width:210px; margin-bottom:18px; }
+.ft-socials { display:flex; gap:12px; }
+.ft-soc {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:500; letter-spacing:.18em; text-transform:uppercase;
+  color:rgba(166,149,129,.25); text-decoration:none; transition:color .2s;
+}
+.ft-soc:hover { color:var(--orange); }
+.ft-col-h {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:600; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--orange); opacity:.65; margin-bottom:16px;
+}
+.ft-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.ft-links a { font-size:12.5px; color:rgba(166,149,129,.26); text-decoration:none; transition:color .2s; }
+.ft-links a:hover { color:var(--light); }
+.ft-bottom {
+  max-width:1280px; margin:0 auto;
+  display:flex; justify-content:space-between; align-items:flex-start;
+  flex-wrap:wrap; gap:14px;
+}
+.ft-legal { font-size:10.5px; line-height:1.7; color:rgba(166,149,129,.17); max-width:580px; }
+.ft-copy {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:500; color:rgba(166,149,129,.17); white-space:nowrap;
+}
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(24px); transition:opacity .85s ease,transform .85s ease; }
+.reveal.in { opacity:1; transform:translateY(0); }
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* ── KEYFRAMES ── */
+@keyframes up     { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0}to{opacity:1} }
+@keyframes needle { 0%,100%{opacity:.3}50%{opacity:1} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  nav{padding:18px 24px}
+  .nav-links,.nav-cta{display:none}
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-l{padding:120px 28px 52px}
+  .hero-r{min-height:340px;padding:28px}
+  .hf-1,.hf-2{display:none}
+  .products{padding:72px 24px}
+  .product-grid{grid-template-columns:1fr}
+  .products-head{flex-direction:column;gap:14px}
+  .products-head-note{text-align:left;max-width:100%}
+  .find{padding:72px 24px}
+  .find-inner{grid-template-columns:1fr}
+  .edit-wrap{padding:72px 24px}
+  .edit-inner{grid-template-columns:1fr}
+  .edit-perks{flex-direction:column;gap:16px}
+  footer{padding:44px 24px 28px}
+  .ft-row{grid-template-columns:1fr 1fr;gap:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo"><img src="logo.png" alt="Palisades"/></a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#find">Find Us</a></li>
+    <li><a href="#edit">The Edit</a></li>
+  </ul>
+  <a href="#find" class="nav-cta">Find a Store</a>
+</nav>
+
+<!-- 1. HERO -->
+<section class="hero">
+  <div class="hero-l">
+    <p class="hero-kicker">New Jersey · Premium Cannabis Vape</p>
+    <h1 class="hero-h1">Calm.<br>Clear.<br><em>Elevated.</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-p">A more grounded way to experience cannabis — thoughtfully designed, rooted in place.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-fill">Explore Products</a>
+      <a href="#find" class="btn-ghost">Find a Store</a>
+    </div>
+  </div>
+
+  <div class="hero-r">
+    <div class="hero-product">
+      <div class="hero-glow"></div>
+      <img class="hero-img" src="product-hero.jpeg" alt="Palisades vape"/>
+      <div class="hero-floats">
+        <span class="hf hf-1">Thoughtfully crafted</span>
+        <span class="hf hf-2">Rooted in quality</span>
+      </div>
+    </div>
+  </div>
+
+  <span class="hero-stamp">Palisades Cannabis Co. · New Jersey · Est. 2024</span>
+  <div class="hero-scroll">
+    <span class="scroll-lbl">Scroll</span>
+    <div class="scroll-needle"></div>
+  </div>
+</section>
+
+<!-- 2. PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-head reveal">
+    <div>
+      <p class="eyebrow">The Collection</p>
+      <h2 class="products-head-title">A considered <em>line of vapes.</em></h2>
+    </div>
+    <p class="products-head-note">Small by design. Every SKU is here because it belongs here.</p>
+  </div>
+
+  <div class="product-grid">
+    <div class="p-show reveal">
+      <div class="p-show-visual">
+        <div class="p-show-tag">
+          <p class="eyebrow">Four Colorways</p>
+          <div class="p-show-tag-name">The Palisades<br>Disposable</div>
+        </div>
+        <img class="p-show-img" src="product-lineup.png" alt="Palisades lineup"/>
+      </div>
+      <div class="p-show-foot">
+        <div class="swatches">
+          <div class="sw sw-f" title="Forest"></div>
+          <div class="sw sw-o" title="Terracotta"></div>
+          <div class="sw sw-b" title="Midnight"></div>
+          <div class="sw sw-s" title="Stone"></div>
+        </div>
+        <p class="p-show-tagline">Forest, Terracotta, Midnight, and Stone — each a distinct mood.</p>
+      </div>
+    </div>
+
+    <div class="sku-stack">
+      <div class="sku reveal d1">
+        <div class="sku-visual">
+          <div class="sku-bg skub-1"></div>
+          <div class="sku-shade"></div>
+          <div class="sku-label">
+            <div class="sku-type">Hybrid · 0.5g</div>
+            <div class="sku-name">Cliffside<br>Reserve</div>
+          </div>
+        </div>
+        <div class="sku-info">
+          <div class="sku-tags">
+            <span class="tag">Calm</span>
+            <span class="tag">Focused</span>
+            <span class="tag">Elevated</span>
+          </div>
+          <div class="sku-row">
+            <span class="sku-genetics">Wedding Cake × Runtz</span>
+            <a href="#" class="sku-arrow">→</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sku reveal d2">
+        <div class="sku-visual">
+          <div class="sku-bg skub-2"></div>
+          <div class="sku-shade"></div>
+          <div class="sku-label">
+            <div class="sku-type">Indica · 0.5g</div>
+            <div class="sku-name">Still<br>Evening</div>
+          </div>
+        </div>
+        <div class="sku-info">
+          <div class="sku-tags">
+            <span class="tag">Relaxed</span>
+            <span class="tag">Deep rest</span>
+            <span class="tag">Settled</span>
+          </div>
+          <div class="sku-row">
+            <span class="sku-genetics">Blueberry × OG Kush</span>
+            <a href="#" class="sku-arrow">→</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. FIND US -->
+<section class="find" id="find">
+  <div class="find-inner">
+    <div class="find-l">
+      <p class="eyebrow reveal">Find Palisades</p>
+      <h2 class="find-h reveal d1">Available at select<br><em>New Jersey</em> dispensaries.</h2>
+      <p class="find-p reveal d1">Currently carried at a curated group of NJ dispensaries. Enter your zip to find the closest location.</p>
+      <div class="zip-wrap reveal d2">
+        <input class="zip-in" type="text" placeholder="Enter zip code…" maxlength="5"/>
+        <button class="zip-go">Search</button>
+      </div>
+      <div class="store-rows reveal d2">
+        <div class="s-row">
+          <div><div class="s-name">Apothecarium</div><div class="s-loc">Maplewood, NJ · All strains</div></div>
+          <a href="#" class="s-link">Directions</a>
+        </div>
+        <div class="s-row">
+          <div><div class="s-name">Curaleaf</div><div class="s-loc">Edgewater, NJ · Select strains</div></div>
+          <a href="#" class="s-link">Directions</a>
+        </div>
+        <div class="s-row">
+          <div><div class="s-name">Garden State Dispensary</div><div class="s-loc">Union, NJ · All strains</div></div>
+          <a href="#" class="s-link">Directions</a>
+        </div>
+        <div class="s-row">
+          <div><div class="s-name">Zen Leaf</div><div class="s-loc">Elizabeth, NJ · Select strains</div></div>
+          <a href="#" class="s-link">Directions</a>
+        </div>
+      </div>
+      <p class="find-caveat reveal">Availability varies. Call ahead to confirm stock.</p>
+    </div>
+
+    <div class="find-r reveal d2">
+      <p class="find-map-label">Northern &amp; central New Jersey</p>
+      <div class="map-box">
+        <div class="map-vis"><span class="map-vis-lbl">New Jersey</span></div>
+        <div class="map-key">
+          <div class="mk-row"><div class="mk-dot"></div>Apothecarium · Maplewood</div>
+          <div class="mk-row"><div class="mk-dot"></div>Curaleaf · Edgewater</div>
+          <div class="mk-row"><div class="mk-dot"></div>Garden State Dispensary · Union</div>
+          <div class="mk-row"><div class="mk-dot"></div>Zen Leaf · Elizabeth</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. THE EDIT -->
+<section class="edit-wrap" id="edit">
+  <div class="edit-inner">
+    <div class="edit-l reveal">
+      <p class="eyebrow">The Palisades Edit</p>
+      <h2 class="edit-h">Stay close to<br><em>the brand.</em></h2>
+      <p class="edit-p">Our occasional newsletter — new drops, new stores, and the Palisades point of view on cannabis and design.</p>
+      <div class="edit-perks">
+        <div class="ep"><span class="ep-n">i.</span><p class="ep-t"><strong>Drop alerts</strong> — first to know when new strains arrive.</p></div>
+        <div class="ep"><span class="ep-n">ii.</span><p class="ep-t"><strong>New stores</strong> — early notice when we expand in NJ.</p></div>
+        <div class="ep"><span class="ep-n">iii.</span><p class="ep-t"><strong>The perspective</strong> — on ritual, design, and the brand.</p></div>
+      </div>
+    </div>
+    <div class="edit-r reveal d2">
+      <div class="edit-name">The Palisades Edit</div>
+      <div class="edit-sub">Occasional · Curated · Worth opening</div>
+      <div class="e-form">
+        <input class="e-in" id="e-name" type="text" placeholder="First name"/>
+        <input class="e-in" id="e-email" type="email" placeholder="Email address"/>
+        <button class="e-btn" id="e-sub">Join the Edit</button>
+        <p class="e-consent">Occasional emails from Palisades. We never share your info. Unsubscribe anytime. Must be 21+.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-row">
+    <div class="ft-brand">
+      <img src="logo.png" alt="Palisades"/>
+      <p class="ft-desc">A premium cannabis vape brand rooted in New Jersey. Calm, clear, and elevated — by design.</p>
+      <div class="ft-socials">
+        <a href="#" class="ft-soc">Instagram</a>
+        <a href="#" class="ft-soc">Twitter</a>
+      </div>
+    </div>
+    <div>
+      <div class="ft-col-h">Products</div>
+      <ul class="ft-links">
+        <li><a href="#">Cliffside Reserve</a></li>
+        <li><a href="#">Still Evening</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Brand</div>
+      <ul class="ft-links">
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">The Edit</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-h">Find Us</div>
+      <ul class="ft-links">
+        <li><a href="#">Store Locator</a></li>
+        <li><a href="#">Wholesale</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-legal">© 2024 Palisades Cannabis Co. All rights reserved. For use by adults 21 and older. Keep out of reach of children. Available only in licensed New Jersey dispensaries. Do not operate a vehicle or machinery under the influence. Poison Control: 1-800-222-1222.</p>
+    <p class="ft-copy">New Jersey · 21+</p>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () =>
+  nav.classList.toggle('scrolled', window.scrollY > 60), { passive:true });
+
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: 0.1 }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+document.querySelector('.zip-go').addEventListener('click', () => {
+  const v = document.querySelector('.zip-in').value.trim();
+  if (v.length === 5 && /^\d+$/.test(v))
+    alert('All 4 Palisades locations are in northern & central NJ.');
+});
+
+document.getElementById('e-sub').addEventListener('click', () => {
+  if (document.getElementById('e-email').value.includes('@')) {
+    const b = document.getElementById('e-sub');
+    b.textContent = "You're in — welcome to the Edit.";
+    b.style.background = '#111'; b.disabled = true;
+  }
+});
+</script>
+</body>
+</html>
