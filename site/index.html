@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Palisades — Calm. Clear. Elevated.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+:root {
+  --orange:    #EE5D3E;
+  --orange-dk: #D44A2C;
+  --light:     #F2F2F2;
+  --taupe:     #A69581;
+  --ink:       #1C1A18;
+  --deep:      #100E0C;
+  --line-dark: rgba(255,255,255,0.07);
+  /* ── Tune image framing here (horizontal% vertical%) — stops “shifting” crops ── */
+  --hero-bg-pos:        center 20%;
+  --find-cliff-bg-pos:  center 55%;
+  --edit-photo-bg-pos:  center 35%;
+}
+
+/* Lifestyle strip — use .ls-cell img.ls-fr-* so these beat the base .ls-cell img rule */
+.ls-cell img.ls-fr-edc        { object-position: 50% 48%; } /* everyday carry flatlay */
+.ls-cell img.ls-fr-gym-tote   { object-position: 50% 42%; }
+.ls-cell img.ls-fr-porthole  { object-position: 50% 28%; }
+.ls-cell img.ls-fr-subway    { object-position: 52% 45%; }
+.ls-cell img.ls-fr-bag-zip   { object-position: 48% 38%; }
+.ls-cell img.ls-fr-lineup    { object-position: 50% 50%; }
+.ls-cell img.ls-fr-flatlay   { object-position: 50% 48%; }
+.ls-cell img.ls-fr-logo      { object-position: 50% 50%; }
+.ls-cell img.ls-fr-pedestal  { object-position: 50% 45%; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--light);font-family:'Barlow',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:20px 52px;display:flex;align-items:center;justify-content:space-between;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(28,26,24,.95);backdrop-filter:blur(16px);border-bottom-color:var(--line-dark)}
+.nav-logo img{height:112px;width:auto;display:block;opacity:1}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--light)}
+.nav-cta{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fff;background:var(--orange);padding:10px 24px;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--orange-dk)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('pedestal-product.png');background-size:cover;background-position:var(--hero-bg-pos);transform:scale(1.04);transition:transform 8s ease}
+.hero-bg.zoomed{transform:scale(1.0)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(100deg,rgba(16,14,12,.93) 0%,rgba(16,14,12,.76) 42%,rgba(16,14,12,.28) 75%,rgba(16,14,12,.12) 100%),linear-gradient(to top,rgba(16,14,12,.6) 0%,transparent 50%)}
+.hero-cliff-line{position:absolute;bottom:0;left:0;right:0;height:32%;background:linear-gradient(to top,rgba(238,93,62,.07) 0%,transparent 100%);clip-path:polygon(0 62%,7% 38%,15% 56%,23% 22%,31% 46%,39% 8%,47% 32%,56% 2%,64% 24%,72% 0%,80% 18%,88% 4%,95% 14%,100% 6%,100% 100%,0 100%)}
+.hero-content{position:relative;z-index:2;max-width:660px;padding:0 52px;margin-top:80px}
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:.38em;text-transform:uppercase;color:var(--orange);margin-bottom:28px;opacity:0;animation:up .8s ease .3s forwards}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(72px,10vw,136px);font-weight:400;line-height:.9;color:var(--light);margin-bottom:36px;opacity:0;animation:up 1s ease .5s forwards}
+.hero-h1 em{font-style:italic;color:var(--orange);display:block}
+.hero-rule{width:44px;height:2px;background:var(--orange);margin-bottom:28px;opacity:0;animation:up .9s ease .65s forwards}
+.hero-p{font-size:16px;line-height:1.85;color:rgba(242,242,242,.6);max-width:380px;margin-bottom:52px;opacity:0;animation:up .9s ease .75s forwards}
+.hero-btns{display:flex;align-items:center;gap:22px;opacity:0;animation:up .9s ease .9s forwards}
+.btn-fill{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#fff;background:var(--orange);padding:15px 34px;text-decoration:none;transition:background .2s}
+.btn-fill:hover{background:var(--orange-dk)}
+.btn-ghost{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(242,242,242,.65);text-decoration:none;display:flex;align-items:center;gap:11px;transition:color .2s}
+.btn-ghost::after{content:'';display:block;width:30px;height:1px;background:var(--orange);transition:width .3s}
+.btn-ghost:hover{color:var(--light)}
+.btn-ghost:hover::after{width:46px}
+.hero-scroll{position:absolute;bottom:38px;left:52px;z-index:3;display:flex;align-items:center;gap:12px;opacity:0;animation:fadeIn .8s ease 1.8s forwards}
+.scroll-needle{width:44px;height:1px;background:linear-gradient(to right,var(--orange),transparent);animation:needleH 2.4s ease infinite}
+.scroll-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--taupe)}
+.hero-stamp{position:absolute;bottom:40px;right:52px;z-index:3;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:rgba(166,149,129,.3);opacity:0;animation:fadeIn .8s ease 1.6s forwards}
+
+/* ═══════════════════════════════════════
+   COLLECTION
+═══════════════════════════════════════ */
+.collection{
+  position:relative;
+  background:#0A0908;
+  overflow:hidden;
+}
+.col-ambient{
+  position:absolute;inset:0;
+  transition:background 0.75s ease;
+  pointer-events:none;z-index:0;
+}
+
+/* header */
+.col-head{
+  position:relative;z-index:2;
+  padding:72px 52px 48px;
+  max-width:1400px;margin:0 auto;
+  border-bottom:1px solid var(--line-dark);
+  display:flex;justify-content:space-between;align-items:flex-end;
+}
+.col-eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.38em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.col-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3.2vw,46px);font-weight:400;color:var(--light);line-height:1.1}
+.col-title em{font-style:italic;color:var(--orange)}
+.col-subtitle{font-size:13px;color:rgba(166,149,129,.45);line-height:1.7;max-width:180px;text-align:right}
+
+/* ── MAIN LAYOUT: [strips+pen] | info ── */
+.col-main{
+  position:relative;z-index:2;
+  max-width:1400px;margin:0 auto;
+  padding:0 52px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:700px;
+}
+
+/* ── LEFT HALF: vertical strips + pen floating over them ── */
+.col-left{
+  position:relative;
+  border-right:1px solid var(--line-dark);
+  overflow:hidden;
+  display:flex;align-items:stretch;
+}
+
+/* the 4 vertical strips — run full height side by side */
+.strips{
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  height:100%;
+}
+
+.strip{
+  /* base: equal narrow slices */
+  flex:1;
+  position:relative;
+  cursor:pointer;
+  overflow:hidden;
+  transition:flex 0.55s cubic-bezier(.4,0,.2,1), opacity .4s;
+  min-width:0;
+}
+
+/* active strip expands */
+.strip.active{
+  flex: 3.5;
+}
+.strip:hover:not(.active){
+  flex: 1.4;
+}
+
+/* color fill */
+.strip-fill{
+  position:absolute;inset:0;
+  opacity:.55;
+  transition:opacity .5s;
+}
+.strip.active .strip-fill{opacity:.85}
+.strip:hover:not(.active) .strip-fill{opacity:.7}
+
+/* thin top highlight line */
+.strip-fill::after{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:rgba(255,255,255,.15);
+  transition:background .4s;
+}
+.strip.active .strip-fill::after{background:rgba(255,255,255,.4)}
+
+/* label at bottom of each strip */
+.strip-label{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  padding:20px 14px 24px;
+  background:linear-gradient(to top, rgba(0,0,0,.6) 0%, transparent 100%);
+  display:flex;flex-direction:column;gap:4px;
+  pointer-events:none;
+}
+.strip-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;line-height:1;
+  opacity:0;
+  transform:translateY(6px) rotate(0deg);
+  transition:opacity .4s, transform .4s;
+  white-space:nowrap;
+}
+.strip.active .strip-name{
+  opacity:1;transform:translateY(0);
+}
+
+.strip-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(255,255,255,.6);
+  align-self:flex-start;
+  opacity:0;transition:opacity .4s .1s;
+  flex-shrink:0;
+}
+.strip.active .strip-dot{opacity:1}
+
+/* ── PEN floating over the strips ── */
+.pen-float{
+  position:absolute;
+  /* center the pen over all the strips */
+  top:0;bottom:0;
+  left:0;right:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  z-index:10;
+}
+
+/* glow behind pen */
+.pen-glow{
+  position:absolute;
+  width:260px;height:380px;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  filter:blur(64px);
+  opacity:.5;
+  transition:background 0.7s ease;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* platform shadow */
+.pen-platform{
+  position:absolute;
+  bottom:56px;left:50%;transform:translateX(-50%);
+  width:90px;height:12px;border-radius:50%;
+  filter:blur(10px);
+  transition:background .7s ease;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* pen images — fixed frame so every colorway sits in the same spot */
+.pen-img{
+  position:absolute;
+  left:50%;
+  top:46%;
+  width:clamp(108px,12vw,168px);
+  height:clamp(300px,48vh,440px);
+  object-fit:contain;
+  object-position:center bottom;
+  filter: drop-shadow(0 20px 48px rgba(0,0,0,.55));
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  opacity:0;
+  transition:opacity .55s ease;
+  transform:translate(-50%,-50%) scale(.94) translateY(8px);
+  z-index:2;
+  pointer-events:none;
+}
+.pen-img.active{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1) translateY(0);
+  animation:penFloat 4.5s ease-in-out .4s infinite;
+  will-change:transform;
+}
+
+/* ── RIGHT HALF: info panel ── */
+.col-right{
+  padding:60px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+.info-panels{position:relative;flex:1;min-height:460px}
+.info-panel{
+  position:absolute;inset:0;
+  opacity:0;transform:translateX(18px);
+  transition:opacity .5s ease, transform .5s ease;
+  pointer-events:none;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.info-panel.active{
+  opacity:1;transform:translateX(0);
+  pointer-events:auto;position:relative;
+}
+
+.ip-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,4.5vw,64px);
+  font-weight:400;line-height:.9;
+  margin-bottom:18px;
+}
+.ip-name em{display:block;font-style:italic;font-size:.74em}
+
+.ip-vibe{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--taupe);margin-bottom:24px;
+  display:flex;align-items:center;gap:10px;
+}
+.ip-vibe::before{content:'';display:block;width:20px;height:1px;background:currentColor;flex-shrink:0}
+
+.ip-desc{
+  font-size:14px;line-height:1.88;
+  color:rgba(166,149,129,.68);
+  max-width:420px;margin-bottom:28px;
+}
+
+.ip-strain{
+  display:flex;gap:0;margin-bottom:24px;
+  border:1px solid var(--line-dark);
+}
+.ip-cell{
+  flex:1;padding:14px 18px;
+  border-right:1px solid var(--line-dark);
+}
+.ip-cell:last-child{border-right:none}
+.ip-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--taupe);margin-bottom:5px}
+.ip-val{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;color:var(--light)}
+.ip-sub{font-size:11px;color:var(--taupe);margin-top:2px}
+
+.ip-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px}
+.iptag{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);border:1px solid rgba(255,255,255,.1);padding:5px 11px;transition:all .25s}
+.info-panel.active .iptag:hover{border-color:var(--ic);color:var(--ic)}
+
+.ip-btn{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:#fff;padding:14px 28px;text-decoration:none;
+  display:inline-block;width:fit-content;
+  border:none;cursor:pointer;
+  transition:opacity .2s,transform .2s;
+}
+.ip-btn:hover{opacity:.85;transform:translateY(-2px)}
+
+/* ── FIND US ── */
+.find{padding:0;position:relative;overflow:hidden}
+.find-cliff{position:absolute;inset:0;background-image:url('cliff.png');background-size:cover;background-position:var(--find-cliff-bg-pos);background-attachment:fixed}
+.find-cliff-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(16,14,12,.97) 0%,rgba(16,14,12,.92) 38%,rgba(16,14,12,.72) 65%,rgba(16,14,12,.52) 100%)}
+.find-cliff-overlay::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange)}
+.find-inner-wrap{position:relative;z-index:2;padding:96px 52px}
+.find-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.find-h{font-family:'Playfair Display',serif;font-size:clamp(30px,3.6vw,52px);font-weight:400;color:var(--light);line-height:1.1;margin-bottom:20px}
+.find-h em{font-style:italic;color:var(--orange)}
+.find-p{font-size:14.5px;line-height:1.85;color:rgba(166,149,129,.65);margin-bottom:36px;max-width:400px}
+.zip-wrap{display:flex;max-width:380px;border:1px solid rgba(166,149,129,.22);margin-bottom:36px}
+.zip-in{flex:1;padding:14px 18px;background:transparent;border:none;outline:none;font-family:'Barlow',sans-serif;font-size:13px;font-weight:300;color:var(--light)}
+.zip-in::placeholder{color:rgba(166,149,129,.38);font-style:italic}
+.zip-go{padding:0 20px;background:var(--orange);border:none;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#fff;cursor:pointer;transition:background .2s}
+.zip-go:hover{background:var(--orange-dk)}
+.store-rows{border-top:1px solid var(--line-dark)}
+.s-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line-dark);transition:padding-left .25s}
+.s-row:hover{padding-left:8px}
+.s-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--light)}
+.s-loc{font-size:12px;color:var(--taupe);margin-top:2px}
+.s-link{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:color .2s}
+.s-link::after{content:'';display:block;width:18px;height:1px;background:currentColor;transition:width .3s}
+.s-link:hover{color:var(--orange)}
+.s-link:hover::after{width:28px}
+.find-caveat{margin-top:20px;font-size:11px;color:rgba(166,149,129,.35);font-style:italic}
+.find-r{padding-top:8px}
+.find-map-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);margin-bottom:16px}
+.map-box{border:1px solid rgba(255,255,255,.1);padding:24px;background:rgba(10,9,8,.55);backdrop-filter:blur(8px)}
+.map-frame-wrap{width:100%;overflow:hidden;margin-bottom:20px;border:1px solid rgba(255,255,255,.08);}
+.find-map{height:260px;width:100%;background:rgba(16,14,12,.4);}
+.find-map .leaflet-control-attribution{font-size:10px;opacity:.6;}
+.find-map .leaflet-popup-content-wrapper{background:var(--ink);color:var(--light);border:1px solid var(--line-dark);}
+.find-map .leaflet-popup-tip{background:var(--ink);}
+.find-marker{background:none!important;border:none!important;}
+
+
+
+.map-key{display:flex;flex-direction:column;gap:8px}
+.mk-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--taupe)}
+.mk-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0}
+
+/* ── EDIT ── */
+/* ── EDIT SECTION ── */
+.edit-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:680px;
+  overflow:hidden;
+  position:relative;
+}
+
+/* photo side */
+.edit-photo{
+  position:relative;
+  overflow:hidden;
+}
+.edit-photo-img{
+  position:absolute;inset:0;
+  background-size:cover;
+  background-position:var(--edit-photo-bg-pos);
+  transition:transform 8s ease;
+}
+.edit-photo:hover .edit-photo-img{transform:scale(1.04)}
+.edit-photo-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to right, rgba(16,14,12,.2) 0%, rgba(16,14,12,.1) 60%, rgba(16,14,12,.5) 100%
+  ),linear-gradient(
+    to top, rgba(16,14,12,.6) 0%, transparent 40%
+  );
+}
+.edit-photo-caption{
+  position:absolute;bottom:36px;left:36px;z-index:2;
+}
+.edit-photo-tag{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  padding:6px 12px;
+  border:1px solid rgba(255,255,255,.2);
+  background:rgba(16,14,12,.35);
+  backdrop-filter:blur(4px);
+}
+
+/* form side */
+.edit-form-side{
+  background:var(--orange);
+  padding:72px 60px;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.edit-cta-wrap{ margin-bottom:28px; }
+.edit-form-side::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 80% at 80% 20%,rgba(255,255,255,.08) 0%,transparent 55%);
+}
+.edit-form-side > *{position:relative;z-index:1}
+.edit-eyebrow{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px;font-weight:500;letter-spacing:.38em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);margin-bottom:18px;
+}
+.edit-h{font-family:'Playfair Display',serif;font-size:clamp(32px,3.5vw,52px);font-weight:400;color:#fff;line-height:1.08;margin-bottom:14px}
+.edit-h em{font-style:italic;opacity:.85}
+.edit-p{font-size:14px;line-height:1.82;color:rgba(255,255,255,.62);max-width:400px}
+.edit-perks{display:flex;gap:24px;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.18);margin-bottom:32px}
+.ep{display:flex;align-items:flex-start;gap:10px;flex:1}
+.ep-n{font-family:'Playfair Display',serif;font-size:13px;font-style:italic;color:rgba(255,255,255,.5);flex-shrink:0}
+.ep-t{font-size:12px;color:rgba(255,255,255,.55);line-height:1.6}
+.ep-t strong{color:#fff;font-weight:400}
+.edit-name{font-family:'Playfair Display',serif;font-size:24px;font-style:italic;color:#fff;margin-bottom:4px}
+.edit-sub{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:24px}
+.e-form{display:flex;flex-direction:column;gap:12px}
+.e-in{padding:16px 18px;background:rgba(255,255,255,.14);border:2px solid rgba(255,255,255,.22);outline:none;font-family:'Barlow',sans-serif;font-size:14px;font-weight:300;color:#fff;transition:border-color .25s}
+.e-in::placeholder{color:rgba(255,255,255,.4);font-style:italic}
+.e-in:focus{border-color:rgba(255,255,255,.7)}
+.e-btn{
+  padding:18px 28px;
+  background:var(--ink);
+  border:none;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:#fff;
+  cursor:pointer;
+  transition:background .2s, transform .2s, box-shadow .2s;
+  margin-top:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+}
+.e-btn:hover{
+  background:#000;
+  transform:translateY(-2px);
+  box-shadow:0 6px 24px rgba(0,0,0,.35);
+}
+.e-consent{font-size:10px;color:rgba(255,255,255,.28);line-height:1.6;margin-top:4px}
+
+/* ── FOOTER ── */
+footer{background:var(--deep);padding:48px 52px 32px}
+.ft-row{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;padding-bottom:40px;border-bottom:1px solid var(--line-dark);margin-bottom:28px}
+.ft-brand img{height:36px;width:auto;display:block;opacity:.75;margin-bottom:12px}
+.ft-desc{font-size:12.5px;line-height:1.75;color:rgba(166,149,129,.28);max-width:210px;margin-bottom:18px}
+.ft-socials{display:flex;gap:12px}
+.ft-soc{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(166,149,129,.25);text-decoration:none;transition:color .2s}
+.ft-soc:hover{color:var(--orange)}
+.ft-col-h{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--orange);opacity:.65;margin-bottom:16px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-links a{font-size:12.5px;color:rgba(166,149,129,.26);text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:var(--light)}
+.ft-bottom{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+.ft-legal{font-size:10.5px;line-height:1.7;color:rgba(166,149,129,.17);max-width:580px}
+.ft-copy{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;color:rgba(166,149,129,.17);white-space:nowrap}
+
+
+/* ── LIFESTYLE STRIP ── */
+.lifestyle-strip {
+  background: var(--deep);
+  overflow: hidden;
+  position: relative;
+  padding: 0;
+  border-top: 1px solid var(--line-dark);
+  border-bottom: 1px solid var(--line-dark);
+}
+
+/* top label row */
+.lifestyle-label-row {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 52px;
+  background: linear-gradient(to bottom, rgba(16,14,12,.7) 0%, transparent 100%);
+  pointer-events: none;
+}
+.lifestyle-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .36em; text-transform: uppercase;
+  color: var(--orange);
+}
+.lifestyle-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-style: italic;
+  color: rgba(166,149,129,.5);
+}
+
+/* scrolling track */
+.ls-track-wrap {
+  display: flex;
+  width: max-content;
+  animation: stripScroll 32s linear infinite;
+  will-change: transform;
+}
+.ls-track-wrap:hover {
+  animation-play-state: paused;
+}
+
+/* each photo cell */
+.ls-cell {
+  position: relative;
+  height: 480px;
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+/* portrait images narrower, landscape wider */
+.ls-cell.portrait  { width: 280px; }
+.ls-cell.landscape { width: 560px; }
+.ls-cell.square    { width: 420px; }
+
+.ls-cell img.ls-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transition: transform .7s cubic-bezier(.25,.46,.45,.94);
+}
+.ls-cell:hover img.ls-img { transform: scale(1.06); }
+
+/* dark overlay on each cell */
+.ls-cell-overlay {
+  position: absolute; inset: 0;
+  background: rgba(16,14,12,.18);
+  transition: background .4s;
+}
+.ls-cell:hover .ls-cell-overlay {
+  background: rgba(16,14,12,.05);
+}
+
+/* caption that appears on hover */
+.ls-caption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 48px 24px 24px;
+  background: linear-gradient(to top, rgba(16,14,12,.75) 0%, transparent 100%);
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity .4s, transform .4s;
+}
+.ls-cell:hover .ls-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+.ls-caption-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(245,240,232,.7);
+}
+
+/* gap between cells */
+.ls-gap {
+  width: 2px;
+  height: 480px;
+  background: rgba(255,255,255,.04);
+  flex-shrink: 0;
+}
+
+@keyframes stripScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@media(max-width:768px) {
+  .ls-cell { height: 320px; }
+  .ls-cell.portrait  { width: 200px; }
+  .ls-cell.landscape { width: 380px; }
+  .ls-cell.square    { width: 290px; }
+  .ls-gap { height: 320px; }
+  .lifestyle-label-row { padding: 16px 24px; }
+}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .85s ease,transform .85s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}
+
+@keyframes up     {from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn {from{opacity:0}to{opacity:1}}
+@keyframes needleH{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes penFloat {
+  0%,100%{ transform: translate(-50%,-50%) translateY(0) scale(1); }
+  50%{     transform: translate(-50%,-50%) translateY(-10px) scale(1); }
+}
+
+@media(max-width:960px){
+  nav{padding:18px 24px}
+  .nav-links,.nav-cta{display:none}
+  .hero-content{padding:0 28px}
+  .col-head{padding:56px 24px 28px;flex-direction:column;gap:10px;align-items:flex-start}
+  .col-subtitle{text-align:left;max-width:100%}
+  .col-main{grid-template-columns:1fr;padding:0;min-height:auto}
+  .col-left{min-height:420px}
+  .col-right{padding:40px 24px 56px;border-top:1px solid var(--line-dark)}
+  .col-right{border-right:none}
+  .find-inner{grid-template-columns:1fr}
+  .find-inner-wrap{padding:72px 24px}
+  .edit-wrap{grid-template-columns:1fr}
+  .edit-photo{min-height:320px}
+  .edit-form-side{padding:52px 24px}
+  .edit-perks{flex-direction:column;gap:14px}
+  footer{padding:44px 24px 28px}
+  .ft-row{grid-template-columns:1fr 1fr;gap:28px}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nav-logo"><img src="white_logo.png" alt="Palisades"/></a>
+  <ul class="nav-links">
+    <li><a href="#collection">Products</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+    <li><a href="the-edit.html">The Edit</a></li>
+    <li><a href="#find">Find Us</a></li>
+  </ul>
+  <a href="#find" class="nav-cta">Find a Store</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-cliff-line"></div>
+  <div class="hero-content">
+    <p class="hero-kicker">New Jersey · Premium Cannabis Vape</p>
+    <h1 class="hero-h1">Calm.<br>Clear.<br><em>Elevated.</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-p">A more grounded way to experience cannabis — thoughtfully designed, rooted in place.</p>
+    <div class="hero-btns">
+      <a href="#collection" class="btn-fill">The Collection</a>
+      <a href="#find" class="btn-ghost">Find a Store</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><span class="scroll-lbl">Scroll</span><div class="scroll-needle"></div></div>
+  <span class="hero-stamp">Palisades Cannabis Co. · New Jersey · Est. 2025</span>
+</section>
+
+<!-- COLLECTION -->
+<section class="collection" id="collection">
+  <div class="col-ambient" id="colAmbient"></div>
+
+  <div class="col-head reveal">
+    <div>
+      <p class="col-eyebrow">The Collection</p>
+      <h2 class="col-title">Choose your <em>colorway.</em></h2>
+    </div>
+    <p class="col-subtitle">Four moods. One form. Each a distinct experience.</p>
+  </div>
+
+  <div class="col-main">
+
+    <!-- LEFT: vertical strips with pen floating over them -->
+    <div class="col-left">
+
+      <!-- 4 vertical color strips side by side -->
+      <div class="strips">
+        <div class="strip active" data-idx="0">
+          <div class="strip-fill" style="background:linear-gradient(180deg,#2E6634 0%,#1A3D1E 100%)"></div>
+          <div class="strip-label">
+            <div class="strip-dot"></div>
+            <div class="strip-name">Forest</div>
+          </div>
+        </div>
+        <div class="strip" data-idx="1">
+          <div class="strip-fill" style="background:linear-gradient(180deg,#EE5D3E 0%,#A33520 100%)"></div>
+          <div class="strip-label">
+            <div class="strip-dot"></div>
+            <div class="strip-name">Terracotta</div>
+          </div>
+        </div>
+        <div class="strip" data-idx="2">
+          <div class="strip-fill" style="background:linear-gradient(180deg,#323030 0%,#111010 100%)"></div>
+          <div class="strip-label">
+            <div class="strip-dot"></div>
+            <div class="strip-name">Midnight</div>
+          </div>
+        </div>
+        <div class="strip" data-idx="3">
+          <div class="strip-fill" style="background:linear-gradient(180deg,#B4B0AC 0%,#787470 100%)"></div>
+          <div class="strip-label">
+            <div class="strip-dot"></div>
+            <div class="strip-name">Stone</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pen floating in the center over the strips -->
+      <div class="pen-float">
+        <div class="pen-glow"     id="penGlow"></div>
+        <div class="pen-platform" id="penPlatform"></div>
+        <img class="pen-img active" id="pi-green"  src="palisade_green.png"  alt="Forest"/>
+        <img class="pen-img"        id="pi-orange" src="palisade_orange.png" alt="Terracotta"/>
+        <img class="pen-img"        id="pi-black"  src="palisade_black.png"  alt="Midnight"/>
+        <img class="pen-img"        id="pi-white"  src="palisade_white.png"  alt="Stone"/>
+      </div>
+
+    </div><!-- /col-left -->
+
+    <!-- RIGHT: info -->
+    <div class="col-right">
+      <div class="info-panels">
+
+        <div class="info-panel active" data-p="0" style="--ic:#3A7040">
+          <div class="ip-name" style="color:#4E8A55">Forest<em>Green</em></div>
+          <div class="ip-vibe">Grounded · Focused · Steady</div>
+          <p class="ip-desc">The everyday driver. Deep forest green for the person who keeps their head level — productive, present, and clear-eyed all day long.</p>
+          <div class="ip-strain">
+            <div class="ip-cell"><div class="ip-lbl">Strain</div><div class="ip-val">Cliffside Reserve</div><div class="ip-sub">Hybrid · Wedding Cake × Runtz</div></div>
+            <div class="ip-cell"><div class="ip-lbl">Size</div><div class="ip-val">1.0g</div><div class="ip-sub">Disposable vape</div></div>
+          </div>
+          <div class="ip-tags"><span class="iptag">Calm</span><span class="iptag">Focused</span><span class="iptag">Elevated</span><span class="iptag">Body Ease</span></div>
+          
+        </div>
+
+        <div class="info-panel" data-p="1" style="--ic:#EE5D3E">
+          <div class="ip-name" style="color:#EE5D3E">Terra<em>cotta</em></div>
+          <div class="ip-vibe">Warm · Social · Creative</div>
+          <p class="ip-desc">The social one. Terracotta for the moments with people — open conversations, good lighting, and that ease that comes with the right company.</p>
+          <div class="ip-strain">
+            <div class="ip-cell"><div class="ip-lbl">Strain</div><div class="ip-val">Morning Terrace</div><div class="ip-sub">Sativa · Green Crack × Mimosa</div></div>
+            <div class="ip-cell"><div class="ip-lbl">Size</div><div class="ip-val">1.0g</div><div class="ip-sub">Disposable vape</div></div>
+          </div>
+          <div class="ip-tags"><span class="iptag">Uplifted</span><span class="iptag">Creative</span><span class="iptag">Social</span><span class="iptag">Clear-headed</span></div>
+          
+        </div>
+
+        <div class="info-panel" data-p="2" style="--ic:#909090">
+          <div class="ip-name" style="color:#A0A09A">Mid<em>night</em></div>
+          <div class="ip-vibe">Deep · Still · Unwound</div>
+          <p class="ip-desc">The night shift. Matte black for when the day is done and you want to feel it end. No agenda. Just the quiet you earned.</p>
+          <div class="ip-strain">
+            <div class="ip-cell"><div class="ip-lbl">Strain</div><div class="ip-val">Still Evening</div><div class="ip-sub">Indica · Blueberry × OG Kush</div></div>
+            <div class="ip-cell"><div class="ip-lbl">Size</div><div class="ip-val">1.0g</div><div class="ip-sub">Disposable vape</div></div>
+          </div>
+          <div class="ip-tags"><span class="iptag">Relaxed</span><span class="iptag">Deep Rest</span><span class="iptag">Settled</span><span class="iptag">Pain Relief</span></div>
+          
+        </div>
+
+        <div class="info-panel" data-p="3" style="--ic:#B8B4B0">
+          <div class="ip-name" style="color:#C0BAB4">Stone<em>Gray</em></div>
+          <div class="ip-vibe">Balanced · Easy · Everyday</div>
+          <p class="ip-desc">The all-day carry. Stone gray for the person who doesn't need to make a statement — just wants something clean, reliable, and always ready.</p>
+          <div class="ip-strain">
+            <div class="ip-cell"><div class="ip-lbl">Strain</div><div class="ip-val">Cliffside Reserve</div><div class="ip-sub">Hybrid · Wedding Cake × Runtz</div></div>
+            <div class="ip-cell"><div class="ip-lbl">Size</div><div class="ip-val">1.0g</div><div class="ip-sub">Disposable vape</div></div>
+          </div>
+          <div class="ip-tags"><span class="iptag">Balanced</span><span class="iptag">Calm</span><span class="iptag">Functional</span><span class="iptag">Easy</span></div>
+          
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- LIFESTYLE STRIP -->
+<section class="lifestyle-strip">
+  <div class="lifestyle-label-row">
+    <span class="lifestyle-eyebrow">@puffpalisades</span>
+    <span class="lifestyle-tagline">Part of the ritual.</span>
+  </div>
+  <div class="ls-track-wrap">
+    <!-- set 1 -->
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-edc" src="flatlay-womens.png" alt="Palisades — everyday carry"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Everyday Carry</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-porthole" src="porthole-portrait.png" alt="Palisades — porthole portrait"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Always Ready</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-subway" src="subway-group.png" alt="Palisades — subway group"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Part of the Routine</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-bag-zip" src="gym-bag-zip.png" alt="Palisades — gym bag zip"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">The Essentials</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <!-- set 2 — exact duplicate of set 1 for seamless loop -->
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-edc" src="flatlay-womens.png" alt="Palisades — everyday carry"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Everyday Carry</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-porthole" src="porthole-portrait.png" alt="Palisades — porthole portrait"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Always Ready</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-subway" src="subway-group.png" alt="Palisades — subway group"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">Part of the Routine</span></div>
+    </div>
+    <div class="ls-gap"></div>
+    <div class="ls-cell portrait">
+      <img class="ls-img ls-fr-bag-zip" src="gym-bag-zip.png" alt="Palisades — gym bag zip"/>
+      <div class="ls-cell-overlay"></div>
+      <div class="ls-caption"><span class="ls-caption-text">The Essentials</span></div>
+    </div>
+    <div class="ls-gap"></div>
+  </div>
+</section>
+<!-- FIND US -->
+<section class="find" id="find">
+  <div class="find-cliff"></div>
+  <div class="find-cliff-overlay"></div>
+  <div class="find-inner-wrap">
+    <div class="find-inner">
+      <div class="find-l">
+        <p class="eyebrow reveal">Find Palisades</p>
+        <h2 class="find-h reveal d1">Available at select<br><em>New Jersey</em> dispensaries.</h2>
+        <p class="find-p reveal d1">Currently carried at a curated group of NJ dispensaries.</p>
+        <div class="zip-wrap reveal d2">
+          <input class="zip-in" type="text" placeholder="Enter zip code…" maxlength="5"/>
+          <button class="zip-go">Search</button>
+        </div>
+        <div class="store-rows reveal d2">
+          <div class="s-row" data-lat="40.7312" data-lng="-74.2729" data-name="Apothecarium Maplewood"><div><div class="s-name">Apothecarium</div><div class="s-loc">Maplewood, NJ · All strains</div></div><a href="https://www.google.com/maps/dir//40.7312,-74.2729" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+          <div class="s-row" data-lat="40.8232" data-lng="-73.9762" data-name="Curaleaf Edgewater"><div><div class="s-name">Curaleaf</div><div class="s-loc">Edgewater, NJ · Select strains</div></div><a href="https://www.google.com/maps/dir//40.8232,-73.9762" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+          <div class="s-row" data-lat="40.6976" data-lng="-74.2699" data-name="Garden State Dispensary Union"><div><div class="s-name">Garden State Dispensary</div><div class="s-loc">Union, NJ · All strains</div></div><a href="https://www.google.com/maps/dir//40.6976,-74.2699" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+          <div class="s-row" data-lat="40.6640" data-lng="-74.2107" data-name="Zen Leaf Elizabeth"><div><div class="s-name">Zen Leaf</div><div class="s-loc">Elizabeth, NJ · Select strains</div></div><a href="https://www.google.com/maps/dir//40.6640,-74.2107" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+          <div class="s-row" data-lat="40.7282" data-lng="-74.2185" data-name="URB'N Dispensary Newark"><div><div class="s-name">URB'N Dispensary</div><div class="s-loc">378 South St, Newark, NJ 07105</div></div><a href="https://www.google.com/maps/dir//40.7282,-74.2185" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+          <div class="s-row" data-lat="40.7258" data-lng="-74.0635" data-name="XENA Jersey City"><div><div class="s-name">XENA</div><div class="s-loc">759a Bergen Ave, Jersey City, NJ 07306</div></div><a href="https://www.google.com/maps/dir//40.7258,-74.0635" target="_blank" rel="noopener" class="s-link">Directions</a></div>
+        </div>
+        <p class="find-caveat reveal">Availability varies. Call ahead to confirm stock.</p>
+      </div>
+      <div class="find-r reveal d2">
+        <p class="find-map-label">Northern &amp; central New Jersey</p>
+        <div class="map-box">
+          <div class="map-frame-wrap">
+            <div id="find-map" class="find-map" aria-label="Map of Palisades dispensary locations in New Jersey"></div>
+          </div>
+          <div class="map-key">
+            <div class="mk-row"><div class="mk-dot"></div>Apothecarium · Maplewood</div>
+            <div class="mk-row"><div class="mk-dot"></div>Curaleaf · Edgewater</div>
+            <div class="mk-row"><div class="mk-dot"></div>Garden State Dispensary · Union</div>
+            <div class="mk-row"><div class="mk-dot"></div>Zen Leaf · Elizabeth</div>
+            <div class="mk-row"><div class="mk-dot"></div>URB'N Dispensary · Newark</div>
+            <div class="mk-row"><div class="mk-dot"></div>XENA · Jersey City</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDIT -->
+<section class="edit-wrap" id="edit">
+  <!-- lifestyle photo — left half -->
+  <div class="edit-photo">
+    <div class="edit-photo-img" style="background-image:url('cliff.png')"></div>
+    <div class="edit-photo-overlay"></div>
+    <div class="edit-photo-caption">
+      <span class="edit-photo-tag">The Palisades Experience</span>
+    </div>
+  </div>
+
+  <!-- form — right half -->
+  <div class="edit-form-side reveal">
+    <p class="edit-eyebrow">The Palisades Edit</p>
+    <h2 class="edit-h">Get it <em>first.</em></h2>
+    <p class="edit-p">New drops, new stores, and the Palisades take on cannabis and design — only in your inbox.</p>
+    <div class="edit-perks">
+      <div class="ep"><span class="ep-n">i.</span><p class="ep-t"><strong>Drop alerts</strong> — first to know.</p></div>
+      <div class="ep"><span class="ep-n">ii.</span><p class="ep-t"><strong>New stores</strong> — early notice.</p></div>
+      <div class="ep"><span class="ep-n">iii.</span><p class="ep-t"><strong>The perspective</strong> — ritual &amp; design.</p></div>
+    </div>
+    <div class="edit-cta-wrap">
+      <div class="edit-name">Be the first to know.</div>
+      <div class="edit-sub">Join the Edit — no spam, just the good stuff.</div>
+    </div>
+    <div class="e-form">
+      <input class="e-in" id="e-name" type="text" placeholder="First name"/>
+      <input class="e-in" id="e-email" type="email" placeholder="Email address"/>
+      <button class="e-btn" id="e-sub">Yes — keep me in the loop</button>
+      <p class="e-consent">Occasional emails from Palisades. We never share your info. Unsubscribe anytime. Must be 21+.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-row">
+    <div class="ft-brand">
+      <img src="white_logo.png" alt="Palisades"/>
+      <p class="ft-desc">A premium cannabis vape brand rooted in New Jersey. Calm, clear, and elevated.</p>
+      <div class="ft-socials"><a href="https://www.instagram.com/puffpalisades" target="_blank" class="ft-soc">Instagram</a><a href="mailto:admin@palisadesgoods.com" class="ft-soc">Contact</a></div>
+    </div>
+    <div><div class="ft-col-h">Products</div><ul class="ft-links"><li><a href="#">Cliffside Reserve</a></li><li><a href="#">Still Evening</a></li></ul></div>
+    <div><div class="ft-col-h">Brand</div><ul class="ft-links"><li><a href="our-story.html">Our Story</a></li><li><a href="the-edit.html">The Edit</a></li><li><a href="mailto:admin@palisadesgoods.com">Press</a></li></ul></div>
+    <div><div class="ft-col-h">Find Us</div><ul class="ft-links"><li><a href="#find">Store Locator</a></li><li><a href="mailto:admin@palisadesgoods.com">Wholesale</a></li><li><a href="mailto:admin@palisadesgoods.com">Contact</a></li></ul></div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-legal">© 2024 Palisades Cannabis Co. All rights reserved. For use by adults 21 and older. Available only in licensed New Jersey dispensaries. Poison Control: 1-800-222-1222.</p>
+    <p class="ft-copy">New Jersey · 21+</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60), {passive:true});
+
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); }),
+  {threshold:0.08}
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Find map (Leaflet + OpenStreetMap — no API key)
+let findMapInstance = null;
+function initFindMap() {
+  const el = document.getElementById('find-map');
+  if (!el || typeof L === 'undefined') return;
+  const stores = [
+    { lat: 40.7312, lng: -74.2729, name: 'Apothecarium · Maplewood' },
+    { lat: 40.8232, lng: -73.9762, name: 'Curaleaf · Edgewater' },
+    { lat: 40.6976, lng: -74.2699, name: 'Garden State Dispensary · Union' },
+    { lat: 40.6640, lng: -74.2107, name: 'Zen Leaf · Elizabeth' },
+    { lat: 40.7282, lng: -74.2185, name: "URB'N Dispensary · Newark" },
+    { lat: 40.7258, lng: -74.0635, name: 'XENA · Jersey City' }
+  ];
+  const map = L.map('find-map', { scrollWheelZoom: true }).setView([40.72, -74.1], 10);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+  const orangeIcon = L.divIcon({ className: 'find-marker', html: '<span style="background:#EE5D3E;width:12px;height:12px;border-radius:50%;display:block;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.4);"></span>', iconSize: [12, 12], iconAnchor: [6, 6] });
+  const bounds = L.latLngBounds([]);
+  stores.forEach(s => {
+    L.marker([s.lat, s.lng], { icon: orangeIcon }).addTo(map).bindPopup(s.name);
+    bounds.extend([s.lat, s.lng]);
+  });
+  if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24], maxZoom: 11 });
+  findMapInstance = map;
+  map.invalidateSize();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFindMap);
+} else {
+  initFindMap();
+}
+// Resize map when Find section scrolls into view (fixes sizing if map was below fold)
+const findReveal = document.querySelector('.find-r.reveal');
+if (findReveal) {
+  const findObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting && findMapInstance) findMapInstance.invalidateSize(); });
+  }, { threshold: 0.1 });
+  findObs.observe(findReveal);
+}
+
+setTimeout(() => document.getElementById('heroBg')?.classList.add('zoomed'), 100);
+document.querySelector('.hero')?.addEventListener('mousemove', e => {
+  const bg = document.getElementById('heroBg');
+  if(!bg) return;
+  bg.style.transform = `scale(1.0) translate(${(e.clientX/window.innerWidth-.5)*14}px,${(e.clientY/window.innerHeight-.5)*9}px)`;
+});
+document.querySelector('.hero')?.addEventListener('mouseleave', () => {
+  document.getElementById('heroBg').style.transform = 'scale(1.0)';
+});
+
+const CW = [
+  {
+    penId:    'pi-green',
+    ambient:  'radial-gradient(ellipse 60% 80% at 30% 50%, rgba(30,90,36,.24) 0%, transparent 60%)',
+    glow:     'radial-gradient(ellipse at 50% 60%, rgba(40,120,50,.52) 0%, transparent 65%)',
+    platform: 'radial-gradient(ellipse at center, rgba(30,100,40,.5) 0%, transparent 70%)',
+  },
+  {
+    penId:    'pi-orange',
+    ambient:  'radial-gradient(ellipse 60% 80% at 30% 50%, rgba(200,70,30,.2) 0%, transparent 60%)',
+    glow:     'radial-gradient(ellipse at 50% 60%, rgba(238,93,62,.52) 0%, transparent 65%)',
+    platform: 'radial-gradient(ellipse at center, rgba(200,80,40,.45) 0%, transparent 70%)',
+  },
+  {
+    penId:    'pi-black',
+    ambient:  'radial-gradient(ellipse 60% 80% at 30% 50%, rgba(60,58,55,.18) 0%, transparent 60%)',
+    glow:     'radial-gradient(ellipse at 50% 60%, rgba(80,78,75,.45) 0%, transparent 65%)',
+    platform: 'radial-gradient(ellipse at center, rgba(50,48,44,.4) 0%, transparent 70%)',
+  },
+  {
+    penId:    'pi-white',
+    ambient:  'radial-gradient(ellipse 60% 80% at 30% 50%, rgba(140,136,130,.14) 0%, transparent 60%)',
+    glow:     'radial-gradient(ellipse at 50% 60%, rgba(160,156,152,.38) 0%, transparent 65%)',
+    platform: 'radial-gradient(ellipse at center, rgba(140,136,130,.38) 0%, transparent 70%)',
+  },
+];
+
+let active = 0;
+
+function activate(idx) {
+  if(idx === active) return;
+  active = idx;
+  const cw = CW[idx];
+
+  document.getElementById('colAmbient').style.background = cw.ambient;
+  document.getElementById('penGlow').style.background     = cw.glow;
+  document.getElementById('penPlatform').style.background = cw.platform;
+
+  // swap pen image
+  document.querySelectorAll('.pen-img').forEach(img => {
+    img.classList.remove('active');
+    img.style.animation = 'none';
+  });
+  const next = document.getElementById(cw.penId);
+  if(next) { void next.offsetWidth; next.classList.add('active'); next.style.animation = ''; }
+
+  // strips
+  document.querySelectorAll('.strip').forEach((s,i) => s.classList.toggle('active', i===idx));
+
+  // info panels
+  document.querySelectorAll('.info-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+}
+
+document.querySelectorAll('.strip').forEach((s, idx) => {
+  s.addEventListener('click', () => activate(idx));
+});
+
+// init
+document.getElementById('colAmbient').style.background = CW[0].ambient;
+document.getElementById('penGlow').style.background     = CW[0].glow;
+document.getElementById('penPlatform').style.background = CW[0].platform;
+
+document.querySelector('.zip-go')?.addEventListener('click', () => {
+  const v = document.querySelector('.zip-in').value.trim();
+  if(v.length===5 && /^\d+$/.test(v))
+    alert('All 4 Palisades locations are in northern & central NJ.');
+});
+document.getElementById('e-sub')?.addEventListener('click', () => {
+  if(document.getElementById('e-email').value.includes('@')) {
+    const b = document.getElementById('e-sub');
+    b.textContent = "You're in — welcome to the Edit.";
+    b.style.background = '#111'; b.disabled = true;
+  }
+});
+
+// ── Pen background removal — flood-fill from all 4 corners ──
+function removeBg(img) {
+  const c = document.createElement('canvas');
+  c.width  = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  const id = ctx.getImageData(0, 0, c.width, c.height);
+  const px = id.data;
+  const W  = c.width, H = c.height;
+
+  // sample bg color from average of 4 corners
+  function sampleCorner(x, y) {
+    const i = (y * W + x) * 4;
+    return [px[i], px[i+1], px[i+2]];
+  }
+  const corners = [
+    sampleCorner(0, 0),
+    sampleCorner(W-1, 0),
+    sampleCorner(0, H-1),
+    sampleCorner(W-1, H-1)
+  ];
+  // pick the corner with lowest brightness (most likely true bg)
+  const [bgR, bgG, bgB] = corners.reduce((a, b) =>
+    (a[0]+a[1]+a[2]) < (b[0]+b[1]+b[2]) ? a : b
+  );
+
+  const TOL  = 55;   // flood-fill match tolerance
+  const SOFT = 28;   // extra softening band beyond TOL
+
+  // BFS flood-fill from all 4 corners simultaneously
+  const visited = new Uint8Array(W * H);
+  const queue   = [];
+
+  function enqueue(x, y) {
+    if (x < 0 || y < 0 || x >= W || y >= H) return;
+    const idx = y * W + x;
+    if (visited[idx]) return;
+    visited[idx] = 1;
+    const pi = idx * 4;
+    const dr = Math.abs(px[pi]   - bgR);
+    const dg = Math.abs(px[pi+1] - bgG);
+    const db = Math.abs(px[pi+2] - bgB);
+    const dist = dr + dg + db;
+    if (dist < TOL + SOFT) queue.push(x, y);
+  }
+
+  // seed corners
+  enqueue(0,   0);
+  enqueue(W-1, 0);
+  enqueue(0,   H-1);
+  enqueue(W-1, H-1);
+
+  // also seed along all 4 edges to catch non-corner bg
+  for (let x = 0; x < W; x++) { enqueue(x, 0); enqueue(x, H-1); }
+  for (let y = 0; y < H; y++) { enqueue(0, y); enqueue(W-1, y); }
+
+  let qi = 0;
+  while (qi < queue.length) {
+    const x = queue[qi++];
+    const y = queue[qi++];
+    const pi = (y * W + x) * 4;
+    const dr = Math.abs(px[pi]   - bgR);
+    const dg = Math.abs(px[pi+1] - bgG);
+    const db = Math.abs(px[pi+2] - bgB);
+    const dist = dr + dg + db;
+
+    if (dist < TOL) {
+      // fully inside background — erase
+      px[pi+3] = 0;
+    } else if (dist < TOL + SOFT) {
+      // soft anti-alias fringe — partial alpha
+      const t = (dist - TOL) / SOFT;
+      px[pi+3] = Math.round(px[pi+3] * t * t);
+    } else {
+      continue; // hit the pen body — don't propagate
+    }
+
+    enqueue(x+1, y); enqueue(x-1, y);
+    enqueue(x, y+1); enqueue(x, y-1);
+    // diagonals for cleaner corners
+    enqueue(x+1, y+1); enqueue(x-1, y+1);
+    enqueue(x+1, y-1); enqueue(x-1, y-1);
+  }
+
+  ctx.putImageData(id, 0, 0);
+  img.src = c.toDataURL('image/png');
+}
+
+function processImg(img) {
+  if (img.complete && img.naturalWidth > 0) {
+    removeBg(img);
+  } else {
+    img.addEventListener('load', () => removeBg(img), {once: true});
+  }
+}
+
+function processAllPens() {
+  // remove bg from pens
+  document.querySelectorAll('.pen-img').forEach(img => processImg(img));
+  // remove bg from logos (black bg baked in)
+  document.querySelectorAll('.nav-logo img, .ft-brand img').forEach(img => processImg(img));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', processAllPens);
+} else {
+  processAllPens();
+}
+</script>
+</body>
+</html>

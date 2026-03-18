@@ -1,0 +1,3 @@
+# Production site is the palisades-package bundle
+[build]
+  publish = "site"

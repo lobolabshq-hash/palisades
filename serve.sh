@@ -1,13 +1,13 @@
 #!/bin/bash
-# Deploy Palisades website
+# Local preview — full marketing site (palisades-package)
 
-cd ~/.openclaw/workspace/palisades/src
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT/site" || exit 1
 
-echo "Starting local server..."
+echo "Starting local server (full site)..."
 echo "Visit: http://localhost:8000"
 echo ""
-echo "To deploy to Netlify:"
-echo "1. Go to https://app.netlify.com/drop"
-echo "2. Drag this folder: ~/.openclaw/workspace/palisades/src"
+echo "Deploy to Netlify (from repo root):"
+echo "  netlify deploy --prod --dir site"
 echo ""
 python3 -m http.server 8000

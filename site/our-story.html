@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Story — Palisades</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+
+:root{--orange:#EE5D3E;--orange-dk:#D44A2C;--light:#F2F2F2;--taupe:#A69581;--ink:#1C1A18;--deep:#100E0C;--line:rgba(166,149,129,0.18);--line-dark:rgba(255,255,255,0.07)}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--light);font-family:'Barlow',sans-serif;font-weight:300;font-size:16px;line-height:1.7;overflow-x:hidden}
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:18px 52px;display:flex;align-items:center;justify-content:space-between;background:rgba(28,26,24,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line-dark)}
+.nav-logo img{height:56px;width:auto;display:block;mix-blend-mode:screen}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--light)}
+.nav-cta{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#fff;background:var(--orange);padding:10px 24px;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--orange-dk)}
+footer{background:var(--deep);padding:48px 52px 32px}
+.ft-row{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;padding-bottom:40px;border-bottom:1px solid var(--line-dark);margin-bottom:28px}
+.ft-brand img{height:36px;width:auto;display:block;mix-blend-mode:screen;opacity:.7;margin-bottom:12px}
+.ft-desc{font-size:12.5px;line-height:1.75;color:rgba(166,149,129,.28);max-width:210px;margin-bottom:18px}
+.ft-socials{display:flex;gap:12px}
+.ft-soc{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(166,149,129,.25);text-decoration:none;transition:color .2s}
+.ft-soc:hover{color:var(--orange)}
+.ft-col-h{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--orange);opacity:.65;margin-bottom:16px}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-links a{font-size:12.5px;color:rgba(166,149,129,.26);text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:var(--light)}
+.ft-bottom{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+.ft-legal{font-size:10.5px;line-height:1.7;color:rgba(166,149,129,.17);max-width:580px}
+.ft-copy{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;color:rgba(166,149,129,.17);white-space:nowrap}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;letter-spacing:.36em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .85s ease,transform .85s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:900px){nav{padding:16px 24px}.nav-links,.nav-cta{display:none}.ft-row{grid-template-columns:1fr 1fr;gap:28px}footer{padding:44px 24px 28px}}
+
+/* ── STORY PAGE ── */
+.story-hero{
+  min-height:92vh;position:relative;display:flex;align-items:flex-end;overflow:hidden;
+}
+.story-hero-bg{
+  position:absolute;inset:0;
+  background-image:url('cliff.png');
+  background-size:cover;background-position:center 40%;
+}
+.story-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(16,14,12,.95) 0%,rgba(16,14,12,.55) 50%,rgba(16,14,12,.2) 100%);
+}
+.story-hero-content{
+  position:relative;z-index:2;
+  max-width:1280px;width:100%;margin:0 auto;
+  padding:0 52px 80px;
+}
+.story-hero-eyebrow{
+  font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:500;
+  letter-spacing:.38em;text-transform:uppercase;color:var(--orange);margin-bottom:20px;
+  opacity:0;animation:fadeIn .8s ease .3s forwards;
+}
+.story-hero-h1{
+  font-family:'Playfair Display',serif;font-size:clamp(52px,8vw,110px);
+  font-weight:400;line-height:.92;color:var(--light);margin-bottom:32px;
+  opacity:0;animation:fadeIn 1s ease .5s forwards;
+}
+.story-hero-h1 em{font-style:italic;color:var(--orange)}
+.story-hero-rule{width:44px;height:2px;background:var(--orange);margin-bottom:28px;opacity:0;animation:fadeIn .9s ease .7s forwards}
+.story-hero-sub{
+  font-size:17px;line-height:1.85;color:rgba(242,242,242,.65);
+  max-width:560px;opacity:0;animation:fadeIn .9s ease .8s forwards;
+}
+
+/* sections */
+.story-section{max-width:1280px;margin:0 auto;padding:96px 52px}
+.story-two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.story-two-col.reverse{direction:rtl}
+.story-two-col.reverse > *{direction:ltr}
+.story-img-wrap{position:relative;overflow:hidden;border-radius:2px}
+.story-img-wrap img{width:100%;height:520px;object-fit:cover;object-position:center;display:block;transition:transform .7s ease}
+.story-img-wrap:hover img{transform:scale(1.03)}
+.story-text-block .eyebrow{margin-bottom:20px}
+.story-h2{
+  font-family:'Playfair Display',serif;font-size:clamp(34px,4vw,54px);
+  font-weight:400;color:var(--light);line-height:1.1;margin-bottom:28px;
+}
+.story-h2 em{font-style:italic;color:var(--orange)}
+.story-p{font-size:15px;line-height:1.9;color:rgba(166,149,129,.72);margin-bottom:20px;max-width:520px}
+.story-rule{width:36px;height:2px;background:var(--orange);margin:32px 0}
+.story-quote{
+  font-family:'Playfair Display',serif;font-size:21px;font-style:italic;
+  color:var(--light);padding-left:20px;border-left:2px solid var(--orange);
+  line-height:1.55;max-width:440px;
+}
+
+/* values strip */
+.values-strip{background:rgba(255,255,255,.03);border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark)}
+.values-inner{
+  max-width:1280px;margin:0 auto;padding:72px 52px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+}
+.val{padding:0 40px 0 0;border-right:1px solid var(--line-dark)}
+.val:last-child{border-right:none;padding-right:0;padding-left:40px}
+.val:not(:first-child){padding-left:40px}
+.val-num{font-family:'Playfair Display',serif;font-size:36px;font-style:italic;color:rgba(238,93,62,.2);margin-bottom:12px;line-height:1}
+.val-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--light);margin-bottom:10px}
+.val-body{font-size:13px;line-height:1.75;color:rgba(166,149,129,.55)}
+
+/* full bleed photo */
+.full-bleed{position:relative;height:520px;overflow:hidden}
+.full-bleed img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.full-bleed-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(16,14,12,.7) 0%,rgba(16,14,12,.1) 50%,transparent 100%)}
+.full-bleed-text{position:absolute;bottom:60px;left:52px;max-width:520px}
+.full-bleed-text .story-h2{font-size:clamp(28px,3.5vw,46px)}
+
+/* team / founders note */
+.founders-note{
+  max-width:760px;margin:0 auto;padding:96px 52px;
+  text-align:center;
+}
+.founders-note .eyebrow{margin-bottom:24px;display:block}
+.founders-quote{
+  font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,36px);
+  font-style:italic;font-weight:400;color:var(--light);line-height:1.4;
+  margin-bottom:32px;
+}
+.founders-sig{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.28em;text-transform:uppercase;color:var(--taupe);
+  display:flex;align-items:center;justify-content:center;gap:16px;
+}
+.founders-sig::before,.founders-sig::after{content:'';display:block;width:32px;height:1px;background:var(--orange)}
+
+@media(max-width:900px){
+  .story-hero-content{padding:0 24px 60px}
+  .story-section{padding:72px 24px}
+  .story-two-col{grid-template-columns:1fr;gap:36px}
+  .story-two-col.reverse{direction:ltr}
+  .values-inner{grid-template-columns:1fr 1fr;gap:32px}
+  .val{border-right:none;padding:0 0 24px;border-bottom:1px solid var(--line-dark)}
+  .val:last-child{border-bottom:none}
+  .full-bleed-text{left:24px}
+  .founders-note{padding:72px 24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="white_logo.png" alt="Palisades" id="navLogo"/></a>
+  <ul class="nav-links">
+    <li><a href="index.html#collection">Products</a></li>
+    <li><a href="our-story.html">Our Story</a></li>
+    <li><a href="the-edit.html">The Edit</a></li>
+    <li><a href="index.html#find">Find Us</a></li>
+  </ul>
+  <a href="index.html#find" class="nav-cta">Find a Store</a>
+</nav>
+
+<!-- HERO -->
+<section class="story-hero">
+  <div class="story-hero-bg"></div>
+  <div class="story-hero-overlay"></div>
+  <div class="story-hero-content">
+    <p class="story-hero-eyebrow">New Jersey · Est. 2025</p>
+    <h1 class="story-hero-h1">Rooted in<br><em>place.</em></h1>
+    <div class="story-hero-rule"></div>
+    <p class="story-hero-sub">Palisades wasn't built in a boardroom. It was built from a belief that cannabis deserved better — better design, better quality, and a cleaner way to exist in people's lives.</p>
+  </div>
+</section>
+
+<!-- ORIGIN STORY -->
+<section class="story-section">
+  <div class="story-two-col reveal">
+    <div class="story-img-wrap">
+      <img src="flatlay-womens.png" alt="Palisades everyday carry"/>
+    </div>
+    <div class="story-text-block">
+      <p class="eyebrow">Where It Started</p>
+      <h2 class="story-h2">A brand born from<br><em>a different standard.</em></h2>
+      <p class="story-p">We grew up in New Jersey. We know the Palisades — those ancient cliffs along the Hudson, steady and composed, indifferent to the noise across the water. That image stuck with us when we started thinking about what a cannabis brand could actually be.</p>
+      <p class="story-p">Most of what existed felt wrong. Too loud, too gimmicky, too disconnected from how the product actually made people feel. We wanted something calmer. Something you'd actually want to carry.</p>
+      <div class="story-rule"></div>
+      <div class="story-quote">"We didn't want to make another cannabis brand. We wanted to make the one we actually wanted to buy."</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES STRIP -->
+<div class="values-strip">
+  <div class="values-inner">
+    <div class="val reveal">
+      <div class="val-num">01</div>
+      <div class="val-title">Grounded</div>
+      <p class="val-body">Everything we make is rooted in place, purpose, and a clear point of view. No trend-chasing. No noise.</p>
+    </div>
+    <div class="val reveal d1">
+      <div class="val-num">02</div>
+      <div class="val-title">Refined</div>
+      <p class="val-body">Premium without being pretentious. Thoughtful without being overthought. Every detail earns its place.</p>
+    </div>
+    <div class="val reveal d2">
+      <div class="val-num">03</div>
+      <div class="val-title">Honest</div>
+      <p class="val-body">We make what we say and say what we make. Clean formulations, real effects, and labeling you can trust.</p>
+    </div>
+    <div class="val reveal d3">
+      <div class="val-num">04</div>
+      <div class="val-title">Community</div>
+      <p class="val-body">We're from New Jersey. This state is part of our identity — and we're committed to growing here first.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT PHILOSOPHY -->
+<section class="story-section">
+  <div class="story-two-col reverse reveal">
+    <div class="story-img-wrap">
+      <img src="porthole-portrait.png" alt="Palisades into the bag"/>
+    </div>
+    <div class="story-text-block">
+      <p class="eyebrow">The Product</p>
+      <h2 class="story-h2">Designed to<br><em>disappear into your life.</em></h2>
+      <p class="story-p">The best products are the ones that fit. That sit cleanly in a pocket, look good on a table, and never make you explain yourself. That was the brief for every Palisades vape.</p>
+      <p class="story-p">We obsessed over the hardware before we ever talked about strains. Four colorways — Forest, Terracotta, Midnight, and Stone — each a distinct mood, each designed to feel intentional rather than arbitrary.</p>
+      <p class="story-p">The formulations followed the same logic: small range, clear effects, quality you can feel. No shortcuts, no filler. Just a clean 1.0g that does what it says.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FULL BLEED -->
+<div class="full-bleed reveal">
+  <img src="subway-group.png" alt="Palisades community"/>
+  <div class="full-bleed-overlay"></div>
+  <div class="full-bleed-text">
+    <p class="eyebrow">New Jersey First</p>
+    <h2 class="story-h2">Built here.<br><em>For here.</em></h2>
+    <p class="story-p" style="color:rgba(242,242,242,.65);margin-top:16px">We launched in New Jersey because this is home. Every dispensary partnership, every campaign, every decision has been made with this community in mind first.</p>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section class="story-section">
+  <div class="story-two-col reveal">
+    <div class="story-img-wrap">
+      <img src="gym-bag-zip.png" alt="Palisades gym bag"/>
+    </div>
+    <div class="story-text-block">
+      <p class="eyebrow">Our Mission</p>
+      <h2 class="story-h2">Cannabis,<br><em>done differently.</em></h2>
+      <p class="story-p">Palisades exists to prove that cannabis can be refined without being cold, premium without being exclusive, and designed without losing its soul.</p>
+      <p class="story-p">We're building a brand that reflects the people who actually use it — thoughtful, modern, and done with the idea that enjoying cannabis has to come with an asterisk.</p>
+      <p class="story-p">This is just the beginning. New products, new partnerships, and more of New Jersey to come.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDERS NOTE -->
+<section class="founders-note reveal">
+  <span class="eyebrow">A Note from the Founders</span>
+  <p class="founders-quote">"We built Palisades because we believed the market deserved something better — and because New Jersey deserved a brand it could actually be proud of."</p>
+  <div class="founders-sig">The Palisades Team · Est. 2025</div>
+</section>
+
+
+<footer>
+  <div class="ft-row">
+    <div class="ft-brand">
+      <img src="product-lineup.png" alt="Palisades" id="footLogo"/>
+      <p class="ft-desc">A premium cannabis vape brand rooted in New Jersey. Calm, clear, and elevated.</p>
+      <div class="ft-socials">
+        <a href="https://www.instagram.com/puffpalisades" target="_blank" class="ft-soc">Instagram</a>
+        <a href="mailto:admin@palisadesgoods.com" class="ft-soc">Contact</a>
+      </div>
+    </div>
+    <div><div class="ft-col-h">Products</div><ul class="ft-links"><li><a href="index.html#collection">Cliffside Reserve</a></li><li><a href="index.html#collection">Still Evening</a></li></ul></div>
+    <div><div class="ft-col-h">Brand</div><ul class="ft-links"><li><a href="our-story.html">Our Story</a></li><li><a href="the-edit.html">The Edit</a></li><li><a href="mailto:admin@palisadesgoods.com">Press</a></li></ul></div>
+    <div><div class="ft-col-h">Find Us</div><ul class="ft-links"><li><a href="index.html#find">Store Locator</a></li><li><a href="mailto:admin@palisadesgoods.com">Wholesale</a></li><li><a href="mailto:admin@palisadesgoods.com">Contact</a></li></ul></div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-legal">© 2025 Palisades Cannabis Co. All rights reserved. For use by adults 21 and older. Available only in licensed New Jersey dispensaries. Poison Control: 1-800-222-1222.</p>
+    <p class="ft-copy">New Jersey · 21+</p>
+  </div>
+</footer>
+<script>
+function removeBg(img){
+  try{
+    const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
+    const ctx=c.getContext('2d');ctx.drawImage(img,0,0);
+    const id=ctx.getImageData(0,0,c.width,c.height),px=id.data,W=c.width,H=c.height;
+    const corners=[[0,0],[W-1,0],[0,H-1],[W-1,H-1]].map(([x,y])=>{const i=(y*W+x)*4;return[px[i],px[i+1],px[i+2]]});
+    const[bgR,bgG,bgB]=corners.reduce((a,b)=>(a[0]+a[1]+a[2])<(b[0]+b[1]+b[2])?a:b);
+    const TOL=55,SOFT=28,visited=new Uint8Array(W*H),queue=[];
+    function enq(x,y){if(x<0||y<0||x>=W||y>=H)return;const idx=y*W+x;if(visited[idx])return;visited[idx]=1;const pi=idx*4,d=Math.abs(px[pi]-bgR)+Math.abs(px[pi+1]-bgG)+Math.abs(px[pi+2]-bgB);if(d<TOL+SOFT)queue.push(x,y)}
+    for(let x=0;x<W;x++){enq(x,0);enq(x,H-1)}for(let y=0;y<H;y++){enq(0,y);enq(W-1,y)}
+    let qi=0;while(qi<queue.length){const x=queue[qi++],y=queue[qi++],pi=(y*W+x)*4,d=Math.abs(px[pi]-bgR)+Math.abs(px[pi+1]-bgG)+Math.abs(px[pi+2]-bgB);if(d<TOL){px[pi+3]=0}else if(d<TOL+SOFT){px[pi+3]=Math.round(px[pi+3]*((d-TOL)/SOFT)**2)}else continue;enq(x+1,y);enq(x-1,y);enq(x,y+1);enq(x,y-1)}
+    ctx.putImageData(id,0,0);img.src=c.toDataURL('image/png');
+  }catch(e){}
+}
+function pImg(img){if(img.complete&&img.naturalWidth>0)removeBg(img);else img.addEventListener('load',()=>removeBg(img),{once:true})}
+document.querySelectorAll('#navLogo,#footLogo').forEach(pImg);
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

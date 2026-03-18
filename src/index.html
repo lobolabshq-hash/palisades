@@ -47,7 +47,7 @@ nav.scrolled {
   backdrop-filter:blur(16px);
   border-bottom-color:var(--line-dark);
 }
-.nav-logo img { height:32px; width:auto; display:block; filter:brightness(0) invert(1); opacity:.9; }
+.nav-logo img { height:32px; width:auto; display:block; filter:invert(1); opacity:.95; mix-blend-mode:lighten; }
 .nav-links { display:flex; gap:30px; list-style:none; }
 .nav-links a {
   font-family:'Barlow Condensed',sans-serif;
@@ -66,64 +66,67 @@ nav.scrolled {
 .nav-cta:hover { background:var(--orange-dk); }
 
 /* ════════════════════════════════
-   1. HERO
+   1. HERO — full-bleed background like palisades-live
 ════════════════════════════════ */
 .hero {
   min-height:100vh;
-  display:grid; grid-template-columns:52% 48%;
+  display:flex; align-items:center;
   position:relative; overflow:hidden;
-  background:var(--ink);
 }
-.hero::before {
-  content:''; position:absolute; inset:0;
+.hero-bg {
+  position:absolute; inset:0;
+  background-image:url('assets/images/product-hero.png');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.hero-overlay {
+  position:absolute; inset:0;
   background:
-    radial-gradient(ellipse 55% 65% at 70% 38%, rgba(238,93,62,.13) 0%,transparent 58%),
-    radial-gradient(ellipse 35% 50% at 8%  72%, rgba(166,149,129,.06) 0%,transparent 52%);
+    linear-gradient(100deg, rgba(16,14,12,.93) 0%, rgba(16,14,12,.76) 42%, rgba(16,14,12,.28) 75%, rgba(16,14,12,.12) 100%),
+    linear-gradient(to top, rgba(16,14,12,.6) 0%, transparent 50%);
 }
-/* cliff silhouette bottom */
-.hero::after {
-  content:''; position:absolute;
-  bottom:0; left:0; right:0; height:28%;
-  background:linear-gradient(to top, rgba(238,93,62,.055) 0%, transparent 100%);
+.hero-cliff {
+  position:absolute; bottom:0; left:0; right:0; height:32%;
+  background:linear-gradient(to top, rgba(238,93,62,.07) 0%, transparent 100%);
   clip-path:polygon(0 62%,7% 38%,15% 56%,23% 22%,31% 46%,39% 8%,47% 32%,56% 2%,64% 24%,72% 0%,80% 18%,88% 4%,95% 14%,100% 6%,100% 100%,0 100%);
 }
-
-.hero-l {
+.hero-content {
   position:relative; z-index:2;
-  display:flex; flex-direction:column; justify-content:center;
-  padding:140px 68px 100px;
+  max-width:660px;
+  padding:0 52px;
+  margin-top:80px;
 }
 .hero-kicker {
   font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:500;
+  font-size:11px; font-weight:500;
   letter-spacing:.38em; text-transform:uppercase;
   color:var(--orange); margin-bottom:28px;
-  opacity:0; animation:up .8s ease .2s forwards;
+  opacity:0; animation:up .8s ease .3s forwards;
 }
 .hero-h1 {
   font-family:'Playfair Display',serif;
-  font-size:clamp(68px,9vw,124px);
-  font-weight:400; line-height:.92;
+  font-size:clamp(72px,10vw,136px);
+  font-weight:400; line-height:.9;
   color:var(--light); margin-bottom:36px;
-  opacity:0; animation:up 1s ease .4s forwards;
+  opacity:0; animation:up 1s ease .5s forwards;
 }
 .hero-h1 em { font-style:italic; color:var(--orange); display:block; }
 
-/* thin orange rule */
 .hero-rule {
   width:44px; height:2px; background:var(--orange);
   margin-bottom:28px;
-  opacity:0; animation:up .9s ease .55s forwards;
+  opacity:0; animation:up .9s ease .65s forwards;
 }
 .hero-p {
-  font-size:15px; line-height:1.85;
-  color:rgba(166,149,129,.72);
-  max-width:360px; margin-bottom:48px;
-  opacity:0; animation:up .9s ease .65s forwards;
+  font-size:16px; line-height:1.85;
+  color:rgba(242,242,242,.6);
+  max-width:380px; margin-bottom:52px;
+  opacity:0; animation:up .9s ease .75s forwards;
 }
 .hero-btns {
   display:flex; align-items:center; gap:22px;
-  opacity:0; animation:up .9s ease .8s forwards;
+  opacity:0; animation:up .9s ease .9s forwards;
 }
 .btn-fill {
   font-family:'Barlow Condensed',sans-serif;
@@ -137,7 +140,7 @@ nav.scrolled {
   font-family:'Barlow Condensed',sans-serif;
   font-size:11px; font-weight:500;
   letter-spacing:.22em; text-transform:uppercase;
-  color:var(--taupe); text-decoration:none;
+  color:rgba(242,242,242,.65); text-decoration:none;
   display:flex; align-items:center; gap:11px; transition:color .2s;
 }
 .btn-ghost::after {
@@ -147,69 +150,27 @@ nav.scrolled {
 .btn-ghost:hover { color:var(--light); }
 .btn-ghost:hover::after { width:46px; }
 
-/* hero brand tagline — vertical */
-.hero-stamp {
-  position:absolute; bottom:52px; left:68px; z-index:2;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:9px; font-weight:500;
-  letter-spacing:.3em; text-transform:uppercase;
-  color:rgba(166,149,129,.28);
-  opacity:0; animation:fadeIn .8s ease 1.4s forwards;
-}
-
-.hero-r {
-  position:relative; z-index:2;
-  display:flex; align-items:center; justify-content:center;
-  padding:120px 36px 80px;
-  opacity:0; animation:fadeIn 1.4s ease .5s forwards;
-}
-.hero-product {
-  position:relative;
-  display:flex; align-items:center; justify-content:center;
-}
-.hero-glow {
-  position:absolute;
-  width:280px; height:380px; bottom:-32px;
-  background:radial-gradient(ellipse at center, rgba(238,93,62,.2) 0%, transparent 62%);
-  filter:blur(30px); left:50%; transform:translateX(-50%);
-}
-.hero-img {
-  width:clamp(200px,23vw,300px); height:auto; display:block;
-  position:relative; z-index:2;
-  filter:drop-shadow(0 44px 72px rgba(0,0,0,.6));
-}
-.hero-floats {
-  position:absolute; inset:0; pointer-events:none;
-}
-.hf {
-  position:absolute;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:10px; font-weight:500;
-  letter-spacing:.2em; text-transform:uppercase;
-  color:var(--taupe);
-  display:flex; align-items:center; gap:9px; white-space:nowrap;
-}
-.hf::before {
-  content:''; display:block; width:5px; height:5px;
-  border-radius:50%; background:var(--orange); flex-shrink:0;
-}
-.hf-1 { top:22%; right:0; }
-.hf-2 { bottom:28%; left:0; }
-
-/* scroll cue */
 .hero-scroll {
-  position:absolute; bottom:38px; left:50%; transform:translateX(-50%);
-  z-index:3; display:flex; flex-direction:column; align-items:center; gap:9px;
+  position:absolute; bottom:38px; left:52px; z-index:3;
+  display:flex; align-items:center; gap:12px;
   opacity:0; animation:fadeIn .8s ease 1.8s forwards;
 }
 .scroll-needle {
-  width:1px; height:44px;
-  background:linear-gradient(to bottom, var(--orange), transparent);
+  width:44px; height:1px;
+  background:linear-gradient(to right, var(--orange), transparent);
   animation:needle 2.4s ease infinite;
 }
 .scroll-lbl {
   font-family:'Barlow Condensed',sans-serif;
   font-size:9px; letter-spacing:.28em; text-transform:uppercase; color:var(--taupe);
+}
+.hero-stamp {
+  position:absolute; bottom:40px; right:52px; z-index:3;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:9px; font-weight:500;
+  letter-spacing:.3em; text-transform:uppercase;
+  color:rgba(166,149,129,.3);
+  opacity:0; animation:fadeIn .8s ease 1.6s forwards;
 }
 
 /* ════════════════════════════════
@@ -536,7 +497,7 @@ footer {
 }
 .ft-brand img {
   height:32px; width:auto; display:block;
-  filter:brightness(0) invert(1); opacity:.5; margin-bottom:12px;
+  filter:invert(1); opacity:.7; mix-blend-mode:lighten; margin-bottom:12px;
 }
 .ft-desc { font-size:12.5px; line-height:1.75; color:rgba(166,149,129,.28); max-width:210px; margin-bottom:18px; }
 .ft-socials { display:flex; gap:12px; }
@@ -579,10 +540,7 @@ footer {
 @media(max-width:1024px){
   nav{padding:18px 24px}
   .nav-links,.nav-cta{display:none}
-  .hero{grid-template-columns:1fr;min-height:auto}
-  .hero-l{padding:120px 28px 52px}
-  .hero-r{min-height:340px;padding:28px}
-  .hf-1,.hf-2{display:none}
+  .hero-content{padding:0 28px}
   .products{padding:72px 24px}
   .product-grid{grid-template-columns:1fr}
   .products-head{flex-direction:column;gap:14px}
@@ -601,7 +559,7 @@ footer {
 
 <!-- NAV -->
 <nav id="nav">
-  <a href="#" class="nav-logo"><img src="logo.png" alt="Palisades"/></a>
+  <a href="#" class="nav-logo"><img src="assets/images/logo.png" alt="Palisades"/></a>
   <ul class="nav-links">
     <li><a href="#products">Products</a></li>
     <li><a href="#find">Find Us</a></li>
@@ -610,9 +568,12 @@ footer {
   <a href="#find" class="nav-cta">Find a Store</a>
 </nav>
 
-<!-- 1. HERO -->
+<!-- 1. HERO (full-bleed like palisades-live) -->
 <section class="hero">
-  <div class="hero-l">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-cliff"></div>
+  <div class="hero-content">
     <p class="hero-kicker">New Jersey · Premium Cannabis Vape</p>
     <h1 class="hero-h1">Calm.<br>Clear.<br><em>Elevated.</em></h1>
     <div class="hero-rule"></div>
@@ -622,23 +583,11 @@ footer {
       <a href="#find" class="btn-ghost">Find a Store</a>
     </div>
   </div>
-
-  <div class="hero-r">
-    <div class="hero-product">
-      <div class="hero-glow"></div>
-      <img class="hero-img" src="product-hero.jpeg" alt="Palisades vape"/>
-      <div class="hero-floats">
-        <span class="hf hf-1">Thoughtfully crafted</span>
-        <span class="hf hf-2">Rooted in quality</span>
-      </div>
-    </div>
-  </div>
-
-  <span class="hero-stamp">Palisades Cannabis Co. · New Jersey · Est. 2024</span>
   <div class="hero-scroll">
     <span class="scroll-lbl">Scroll</span>
     <div class="scroll-needle"></div>
   </div>
+  <span class="hero-stamp">Palisades Cannabis Co. · New Jersey · Est. 2024</span>
 </section>
 
 <!-- 2. PRODUCTS -->
@@ -796,7 +745,7 @@ footer {
 <footer>
   <div class="ft-row">
     <div class="ft-brand">
-      <img src="logo.png" alt="Palisades"/>
+      <img src="assets/images/logo.png" alt="Palisades"/>
       <p class="ft-desc">A premium cannabis vape brand rooted in New Jersey. Calm, clear, and elevated — by design.</p>
       <div class="ft-socials">
         <a href="#" class="ft-soc">Instagram</a>

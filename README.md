@@ -2,6 +2,16 @@
 
 A premium cannabis vape brand website built for Palisades.
 
+## Two builds in this repo
+
+| Folder | What it is |
+|--------|------------|
+| **`site/`** | **Production bundle** — `index.html`, `our-story.html`, `the-edit.html`, colorway selector, lifestyle carousel, store locator, embedded assets. **Deploy this.** |
+| **`src/`** | Lighter single-page variant (older/alternate). |
+
+**Local preview (full site):** `./serve.sh` or `cd site && python3 -m http.server 8000`  
+**Deploy:** see **[CURSOR_DEPLOY.md](./CURSOR_DEPLOY.md)** — Netlify uses **`netlify.toml`** → publish directory **`site`**.
+
 ## Overview
 
 - **Brand:** Palisades - New Jersey rooted, elevated cannabis vapes
